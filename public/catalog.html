@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog | L&C Enterprise</title>
+
+    <script>
+        const savedTheme = localStorage.getItem("commerce-theme");
+        const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = savedTheme || preferredTheme;          
+    </script>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="/" aria-label="L&C Enterprise home.">
+            <span class="brand-mark">𝕷&𝕮</span>
+            <span>L&C Enterprise</span>
+        </a>
+
+        <nav class="nav-tabs" aria-label="Primary navigation">
+            <button class="nav-tab active" data-view="shop">Catalog</button>            
+            <button class="nav-tab" data-view="orders">Orders</button>
+            <button class="nav-tab admin-only hidden" data-view="admin">Admin</button>            
+        </nav>
+
+        <div class="topbar-actions">
+            <button class="theme-toggle" id="themeToggleButton" type="button" aria-label="Switch Theme">
+                <span class="theme-icon"aria-hidden="true"></span>
+                <span class="theme-label"></span>
+            </button>
+
+            <button class="icon-button" id="cartButton" aria-label="View Cart." title="Cart">
+                <span class="icon">Cart</span>
+                <span class="cart-count" id="cartCount">0</span> 
+            </button>
+
+            <button class="secondary-button" id="authButton">Login</button>
+        </div>             
+                
+    </header>
+
+    <main>
+       <section class="view active" id="shopView">
+        <aside class="filters">
+            <div class="section-heading">
+                <span>Full Catalog</span>
+                <strong id="resultCount">0</strong>
+            </div>
+
+            <label>
+                Search
+                <input id="searchInput" type="search" placeholder="Search products...">        
+            </label>
+
+            <label>
+                Category
+                <select id="categorySelect">
+                    <option value="">All Categories</option>
+                </select>
+            </label>
+
+            <label>
+                Max Price
+                <select id="priceSelect">
+                    <option value="">All prices</option>
+                    <option value="0-50">Under $50</option>
+                    <option value="50-250">$50 - $250</option>
+                    <option value="250-550">$250 - $550</option>
+                    <option value="550-1000">$550 - $1000</option>
+                    <option value="1000+">$1000+</option>
+                </select>
+
+                <input id="priceRange" type="range" min="25" max="2000" step="25">
+                <span id="priceLabel"></span>
+            </label>
+
+            <label>
+                Minimum Rating
+                <select id="ratingSelect">
+                    <option value="">All ratings</option>
+                    <option value="4">4+</option>
+                    <option value="3">3+</option>
+                    <option value="2">2+</option>
+                    <option value="1">1+</option>
+                </select>
+            </label>
+
+            <label class="checkbox-label">
+                In Stock Only
+                <input id="stockCheckbox" type="checkbox">
+            </label>
+        </aside>
+
+        <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="view" id="ordersView">
+        <div class="section-heading">
+            <span>My Orders</span>
+            <button class="secondary-button" id="refreshOrdersButton">Refresh</button>
+        </div>
+        <div id="ordersList" class="order-list"></div>
+    </section>
+
+    <section class="view" id="adminView">
+        <div class="admin-layout">
+            <form class="admin-form" id="productForm">
+                <div class="section-heading">
+                    <span id="formTitle">Add New Product</span>
+                    <button class="secondary-button" type="button" id="resetProductForm">Reset</button>
+                </div>
+
+                <input type="hidden" id="productId">
+
+                <label>Name<input type="text" id="productName" required></label>
+                <label>Category<input type="text" id="productCategory" required></label>
+                <label>Description<textarea id="productDescription" required rows="4"></textarea></label>
+
+                <div class="split">
+                    <label>Price<input type="number" id="productPrice" required min="0" step="0.01"></label>
+                    <label>Stock<input type="number" id="productStock" required min="0" step="1"></label>
+                </div>
+
+                <div class="split">
+                    <label>Rating<input type="number" id="productRating" required min="0" max="5" step="4.5"></label>
+                    <label>Tags<input type="text" id="productTags" placeholder="travel, laptop, canvas"></label>
+                </div>
+                
+                <div class="split">
+                    <label>Image URL<input type="url" id="productImage" required placeholder="https://example.com/image.jpg"></label>
+
+                    <label class="upload-drop">
+                        Upload Image
+                        <input type="file" id="imageUpload" accept="image/*">
+                    </label>
+
+                    <button class="primary-button" type="submit" id="saveProductButton">Save Product</button>       
+                       
+                </form>
+                <div class="wide-panel">
+                    <div class="section-heading">
+                        <span>Inventory</span>
+                        <strong id="adminProductCount">0 products</strong>
+                    </div>
+                    <div class="admin-product" id="adminProducts"></div>
+                </div>
+
+                <div class="wide-panel">
+                    <div class="section-heading">
+                        <span>Order Operations</span>
+                        <strong id="adminOrderCount">0 orders</strong>
+                    </div>
+                    <div class="order-list" id="adminOrders"></div>
+                </div>
+        </div> 
+        </section>
+
+        <span id="metricProducts" hidden></span>
+        <span id="metricCart" hidden></span>
+        </main>
+        <aside class="drawer" id="cartDrawer" aria-hidden="true">
+            <div class="drawer-header">
+                <strong>Shopping Cart</strong>
+                <button class="icon-button" id="closeCartButton" aria-label="Close Cart." title="Close Cart">X</button>
+            </div>
+
+            <div id="cartItems" class="cart-items"></div>
+
+            <form class="checkout-form" id="checkoutForm">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <strong id="cartTotal">$0.00</strong>
+                </div>
+
+                <label>Full Name<input id="shipName" type="text" required placeholder="Enter your full name"></label>
+                <label>Address<input id="shipAddress" type="text" required placeholder="Enter your address"></label>
+                <label>City<input id="shipCity" type="text" required placeholder="Enter your city"></label>
+                <label>Payment Method
+                    <select id="paymentMethod" required>
+                        <option value="">Select payment method</option>
+                        <option value="credit_card">Credit Card</option>
+                        <option value="m-pesa">M-Pesa</option>
+                        <option value="paypal">PayPal</option>
+                    </select>
+                </label>
+
+                <button class="primary-button" type="submit">Checkout</button>                   
+            </form>
+        </aside>
+
+        <div class="modal hidden" id="authModal" aria-hidden="true">
+            <form class="auth-card" id="authForm">
+                <div class="section-heading">
+                    <span id="authTitle">Login</span>
+                    <button class="icon-button" type="button" id="closeAuthButton" aria-label="Close auth modal" title="Close Auth Modal">X</button>
+                </div>
+
+                <div id="mpesaFields" style="display: none;">
+                    <label><M-Pesa Phone Number></label>
+                        <input id="mpesaPhone" type="tel" placeholder="2547XXXXXXXX">                    
+                </div>
+
+                <label class="register-only hidden">
+                    Name
+                    <input id="authName" autocomplete="name">
+                </label>
+
+                <label>Email<input id="authEmail" type="email" autocomplete="email" required></label>
+                <label>Password<input id="authPassword" type="password" autocomplete="current-password" required></label>
+
+                <button class="primary-button" type="submit" id="authSubmit">Login</button>
+                <button class="link-button" type="button" id="toggleAuthMode">Don't have an account? Register</button>                   
+            </form>
+        </div>
+
+        <div class="modal hidden" id="productDetailModal" role="dialog" aria-hidden="true">
+            <div class="product-detail-card">
+                <button class="icon-button detail-close" type="button" id="closeProductDetailButton" aria-label="Close product details modal" title="Close">X</button>
+                <div id="productDetailContent"></div>        
+            </div>
+        </div>
+
+        <div class="toast" id="toast" role="status"></div>    
+
+    <footer class="site-footer">
+        <div class="footer-panel">
+            <strong>&copy; <span id="copyrightYear"></span> L&C Enterprises. All rights reserved.</strong>
+        </div>
+    </footer>
+
+    <script src="/app.js"></script>
+
+</body>
+</html>

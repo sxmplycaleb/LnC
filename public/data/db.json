@@ -1,0 +1,438 @@
+{
+  "users": [
+    {
+      "id": "admin_95a16bacf3bb869b",
+      "email": "admin@demo.com",
+      "name": "Avery Admin",
+      "role": "admin",
+      "passwordHash": "9c9c27095c0bc28093ecf79999c9083e:de4de016c0177cac653b1f6065a8fc6557dcd69c5ff35b210c597cd8bd03cb61b282fc6755058bd260fac3d46cc2073ad21b4eb8478bfeec7f33f479e765775f",
+      "createdAt": "2026-05-29T13:10:58.751Z"
+    },
+    {
+      "id": "user_e77d047653ab177a",
+      "email": "customer@demo.com",
+      "name": "Casey Customer",
+      "role": "customer",
+      "passwordHash": "d09b2effe25a8713ef34e26920cee338:b72e329d877ddae177d01abfc56c1109cd2ab77e4afa23e0f077d387e64dc2b5c5c421c96ed417b89fe45ee4c08941333c8d49ffa01d4127a52143bd6a2972a2",
+      "createdAt": "2026-05-29T13:10:58.754Z"
+    },
+    {
+      "id": "user_d623ac93d85fa603",
+      "name": "mekayla",
+      "email": "blueyy25@gmail.com",
+      "passwordHash": "65ab79e83f4e8449f4dc6d788de5e08a$2b0ea481320e4211f02d952f313dd628f3d39f3829ef31e191e7e304bc7325854f1bea172475134c255871ec5141950872a3fe8dd31fda624590dbceb1252012",
+      "role": "customer",
+      "createdAt": "2026-06-02T16:32:46.114Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod_581916a4af4ea8d3",
+      "name": "Wireless Bluetooth Headphones",
+      "category": "Electronics",
+      "description": "Experience high-quality sound without the wires. These Bluetooth headphones offer a comfortable fit, long battery life, and superior audio performance for music lovers on the go.",
+      "price": 99.99,
+      "stock": 50,
+      "rating": 4.5,
+      "tags": "electronics,audio,wireless",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8ys0v3jwCTF6D4Ol9h23xm7RJM8UPeNGfvYBpI",
+      "reviews": [
+        {
+          "name": "Alice",
+          "rating": 5,
+          "comment": "Amazing sound quality and very comfortable!"
+        },
+        {
+          "name": "Bob",
+          "rating": 4,
+          "comment": "Great value for the price, but the battery life could be better."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_581916a4af4ea8d3",
+      "name": "Ultra HD 4K Smart TV",
+      "category": "Electronics",
+      "description": "Experience stunning visuals with this ultra HD 4K Smart TV. Enjoy immersive picture quality and smart features for the ultimate home entertainment experience.",
+      "price": 499.99,
+      "stock": 20,
+      "rating": 4.8,
+      "tags": "electronics,entertainment,smart",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPagDhVS2uFD4jNVqJsLIBAHi70Tomd1ghOzW",
+      "reviews": [
+        {
+          "name": "Alice",
+          "rating": 5,
+          "comment": "The picture quality is incredible!"
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_2f167845b8b08375",
+      "name": "Stainless Steel Water Bottle",
+      "category": "Home & Kitchen",
+      "description": "Keep your drinks hot or cold for hours with this durable stainless steel water bottle. Perfect for outdoor adventures, gym sessions, or daily hydration.",
+      "price": 24.99,
+      "stock": 100,
+      "rating": 4.7,
+      "tags": "home,kitchen,hydration",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yyCYrPul1G1IAJPjTZgCNHEFxS5KObMdw0Vlt",
+      "reviews": [
+        {
+          "name": "Charlie",
+          "rating": 5,
+          "comment": "Keeps my water cold all day, even in the heat!"
+        },
+        {
+          "name": "Dana",
+          "rating": 4,
+          "comment": "Love the design and durability, but wish it came in more colors."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_cb1e24324",
+      "name": "Recoil Pad for Firearms",
+      "category": "Sports & Outdoors",
+      "description": "Reduce felt recoil and improve shooting comfort with this high-quality recoil pad. It is designed to fit most firearms and provides excellent shock absorption for a better shooting experience.",
+      "price": 19.99,
+      "stock": 49,
+      "rating": 4.3,
+      "tags": "sports,outdoors,firearms",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yMCOMtCDskGlhRAUd28qOZCWF9DnaoejbK7Em",
+      "reviews": [
+        {
+          "name": "Ethan",
+          "rating": 5,
+          "comment": "This recoil pad has made a noticeable difference in my shooting comfort!"
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-06-04T09:54:19.328Z"
+    },
+    {
+      "id": "prod_d4a8bf0191401cc9",
+      "name": "Yoga Mat with Carrying Strap",
+      "category": "Sports & Outdoors",
+      "description": "Enhance your yoga practice with this non-slip yoga mat. It comes with a convenient carrying strap for easy transport to the studio or park.",
+      "price": 39.99,
+      "stock": 75,
+      "rating": 4.6,
+      "tags": "sports,outdoors,yoga",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yqfEZ23VK1zcCabfkuO9P7GmQpTot2LV3R58W",
+      "reviews": [
+        {
+          "name": "Eve",
+          "rating": 5,
+          "comment": "Great yoga mat, very grippy and comfortable!"
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_c46aeb8087a64eb4",
+      "name": "Smart LED Desk Lamp",
+      "category": "Office & Lighting",
+      "description": "Illuminate your workspace with this smart LED desk lamp. It features adjustable brightness, color temperature settings, and can be controlled via a mobile app or voice commands.",
+      "price": 59.99,
+      "stock": 30,
+      "rating": 4.8,
+      "tags": "office,lighting,smart",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yQ4Uk9ztqXcnjuhebvrKafHTN0s68yWPpw2Sl",
+      "reviews": [
+        {
+          "name": "Frank",
+          "rating": 5,
+          "comment": "Love this lamp! The app is easy to use and the lighting is perfect for my desk."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_07c043fe74579202",
+      "name": "Portable Bluetooth Speaker",
+      "category": "Electronics",
+      "description": "Take your music anywhere with this portable Bluetooth speaker. It delivers powerful sound in a compact design, perfect for outdoor adventures or home use.",
+      "price": 79.99,
+      "stock": 25,
+      "rating": 4.7,
+      "tags": "electronics,audio,bluetooth",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yXJk3JMpjVbQ9se1C8AXtkpuEiaLowhSDlBfY",
+      "reviews": [
+        {
+          "name": "Grace",
+          "rating": 5,
+          "comment": "Excellent sound quality and very portable!"
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_8c8d0a71cf8ae483",
+      "name": "Wireless Charging Pad",
+      "category": "Electronics",
+      "description": "Charge your compatible devices wirelessly with this sleek charging pad. It features fast charging technology and is compatible with most Qi-enabled smartphones.",
+      "price": 29.99,
+      "stock": 50,
+      "rating": 4.5,
+      "tags": "electronics,accessories,charging",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yyT2HUB1G1IAJPjTZgCNHEFxS5KObMdw0VltX",
+      "reviews": [
+        {
+          "name": "Henry",
+          "rating": 5,
+          "comment": "Works perfectly with my phone! Very convenient to use."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_f853d4fbf9b1ea70",
+      "name": "Ergonomic Office Chair",
+      "category": "Office & Lighting",
+      "description": "Enhance your workspace with this ergonomic office chair. It provides superior back support and adjustable features for a comfortable seating experience.",
+      "price": 199.99,
+      "stock": 20,
+      "rating": 4.9,
+      "tags": "office,lighting,ergonomic",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yIYXjzTlNc5xyw1OqVLtBmZAT7v6Kn9re8J0f",
+      "reviews": [
+        {
+          "name": "Ivy",
+          "rating": 5,
+          "comment": "The most comfortable chair I've ever used! Highly recommend."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_cc6c239684882f42",
+      "name": "Noise-Canceling Earbuds",
+      "category": "Electronics",
+      "description": "Immerse yourself in crystal-clear sound with these noise-canceling earbuds. They feature advanced noise cancellation technology and provide an exceptional audio experience.",
+      "price": 149.99,
+      "stock": 40,
+      "rating": 4.8,
+      "tags": "electronics,audio,noise-canceling",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8y00oUBvFjgwaLyV7r9NIozlTipdU0h2SnDGCu",
+      "reviews": [
+        {
+          "name": "Jack",
+          "rating": 5,
+          "comment": "The noise cancellation is incredible! These earbuds are a game-changer."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_2f5178b080bfbed1",
+      "name": "Adjustable Laptop Stand",
+      "category": "Office & Lighting",
+      "description": "Elevate your laptop to a comfortable height with this adjustable laptop stand. It provides better ergonomics and improves your workspace setup.",
+      "price": 49.99,
+      "stock": 35,
+      "rating": 4.6,
+      "tags": "office,lighting,ergonomic",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yDWJSoaKjUe9vH8TXdxR3ynPCQW5BhGcz4t12",
+      "reviews": [
+        {
+          "name": "Kate",
+          "rating": 5,
+          "comment": "This stand has improved my posture significantly! Very sturdy and well-designed."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_c31003e499156cae",
+      "name": "Fitness Tracker Smartwatch",
+      "category": "Electronics",
+      "description": "Track your fitness goals and stay connected with this feature-rich smartwatch. It includes a heart rate monitor, GPS tracking, and seamless smartphone integration.",
+      "price": 199.99,
+      "stock": 30,
+      "rating": 4.7,
+      "tags": "electronics,fitness,smartwatch",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8y0wU6oSFjgwaLyV7r9NIozlTipdU0h2SnDGCu",
+      "reviews": [
+        {
+          "name": "Liam",
+          "rating": 5,
+          "comment": "Perfect for tracking my workouts! The battery life is impressive."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    },
+    {
+      "id": "prod_1bbba1eca7a23688",
+      "name": "Smart Home Security Camera",
+      "category": "Electronics",
+      "description": "Keep your home safe with this high-definition security camera. It features night vision, motion detection, and seamless integration with your smart home system.",
+      "price": 129.99,
+      "stock": 25,
+      "rating": 4.8,
+      "tags": "electronics,security,camera",
+      "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yvfkEFZ4gNkix9oX2fMWz7YrJgCa1epQuvtbh",
+      "reviews": [
+        {
+          "name": "Mia",
+          "rating": 5,
+          "comment": "The image quality is outstanding! Great for monitoring my home."
+        }
+      ],
+      "createdAt": "2026-05-29T13:10:58.711Z",
+      "updatedAt": "2026-05-29T13:10:58.711Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord_045d7950d6b75d0f",
+      "userId": "user_d623ac93d85fa603",
+      "customer": {
+        "id": "user_d623ac93d85fa603",
+        "name": "mekayla",
+        "email": "blueyy25@gmail.com",
+        "role": "customer"
+      },
+      "items": [
+        {
+          "productId": "prod_cb1e24324",
+          "name": "Recoil Pad for Firearms",
+          "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yMCOMtCDskGlhRAUd28qOZCWF9DnaoejbK7Em",
+          "price": 19.99,
+          "quantity": 1,
+          "subtotal": 19.99
+        }
+      ],
+      "shippingAddress": {
+        "name": "Caleb Ong'au",
+        "address": "115 Nairobi",
+        "city": "Nairobi"
+      },
+      "subtotal": 19.99,
+      "shipping": 12,
+      "tax": 1.6,
+      "total": 33.59,
+      "status": "Processing",
+      "paymentStatus": "Pending",
+      "paymentProvider": "m-pesa",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-04T09:54:19.353Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-04T09:54:19.353Z"
+        }
+      ],
+      "createdAt": "2026-06-04T09:54:19.353Z",
+      "mpesaResponse": {
+        "requestId": "b73a-483b-a8cf-e649d5c84bd931756",
+        "errorCode": "400.002.02",
+        "errorMessage": "Bad Request - Invalid BusinessShortCode"
+      }
+    },
+    {
+      "id": "ord_24d8a6511991606f",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "email": "admin@demo.com",
+        "name": "Avery Admin",
+        "role": "admin",
+        "createdAt": "2026-05-29T13:10:58.751Z"
+      },
+      "items": [
+        {
+          "productId": "prod_d4d751da023ceda7",
+          "name": "Smoke Test Product",
+          "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8ys0v3jwCTF6D4Ol9h23xm7RJM8UPeNGfvYBpI",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "demo",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-05-29T13:18:00.896Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-05-29T13:18:00.896Z"
+        }
+      ],
+      "createdAt": "2026-05-29T13:18:00.896Z"
+    },
+    {
+      "id": "ord_f03554cb0627de68",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "email": "admin@demo.com",
+        "name": "Avery Admin",
+        "role": "admin",
+        "createdAt": "2026-05-29T13:10:58.751Z"
+      },
+      "items": [
+        {
+          "productId": "prod_cb1e24357e78a024",
+          "name": "Smoke Test Product",
+          "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8ys0v3jwCTF6D4Ol9h23xm7RJM8UPeNGfvYBpI",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "demo",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-05-29T13:11:32.572Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-05-29T13:11:32.572Z"
+        }
+      ],
+      "createdAt": "2026-05-29T13:11:32.572Z"
+    }
+  ]
+}
