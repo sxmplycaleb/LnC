@@ -23,6 +23,14 @@
       "passwordHash": "65ab79e83f4e8449f4dc6d788de5e08a$2b0ea481320e4211f02d952f313dd628f3d39f3829ef31e191e7e304bc7325854f1bea172475134c255871ec5141950872a3fe8dd31fda624590dbceb1252012",
       "role": "customer",
       "createdAt": "2026-06-02T16:32:46.114Z"
+    },
+    {
+      "id": "user_133d69f9a0ab2908",
+      "name": "dfghjdf",
+      "email": "sdfg@gmail.com",
+      "passwordHash": "48bd083214e240275d475c6aae2ea5cf:d0a6682c48e391f7401dba4179e371af21ab314bcfb545b16f5a5bc9583af0ec3cc2b074f951697249a761378c630d7ada2e9955a1c017c4a1c833383f874b70",
+      "role": "customer",
+      "createdAt": "2026-06-12T06:29:26.162Z"
     }
   ],
   "products": [
@@ -142,7 +150,7 @@
       "category": "Office & Lighting",
       "description": "Illuminate your workspace with this smart LED desk lamp. It features adjustable brightness, color temperature settings, and can be controlled via a mobile app or voice commands.",
       "price": 59.99,
-      "stock": 30,
+      "stock": 28,
       "rating": 4.8,
       "tags": "office,lighting,smart",
       "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yQ4Uk9ztqXcnjuhebvrKafHTN0s68yWPpw2Sl",
@@ -154,7 +162,7 @@
         }
       ],
       "createdAt": "2026-05-29T13:10:58.711Z",
-      "updatedAt": "2026-05-29T13:10:58.711Z"
+      "updatedAt": "2026-06-12T06:30:13.377Z"
     },
     {
       "id": "prod_07c043fe74579202",
@@ -298,6 +306,54 @@
     }
   ],
   "orders": [
+    {
+      "id": "ord_9189dc2b2903aba0",
+      "userId": "user_133d69f9a0ab2908",
+      "customer": {
+        "id": "user_133d69f9a0ab2908",
+        "name": "dfghjdf",
+        "email": "sdfg@gmail.com",
+        "role": "customer"
+      },
+      "items": [
+        {
+          "productId": "prod_c46aeb8087a64eb4",
+          "name": "Smart LED Desk Lamp",
+          "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yQ4Uk9ztqXcnjuhebvrKafHTN0s68yWPpw2Sl",
+          "price": 59.99,
+          "quantity": 2,
+          "subtotal": 119.98
+        }
+      ],
+      "shippingAddress": {
+        "name": "dcf",
+        "address": "ddd",
+        "city": "afgh"
+      },
+      "subtotal": 119.98,
+      "shipping": 0,
+      "tax": 9.6,
+      "total": 129.58,
+      "status": "Processing",
+      "paymentStatus": "Pending",
+      "paymentProvider": "m-pesa",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-12T06:30:13.377Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-12T06:30:13.377Z"
+        }
+      ],
+      "createdAt": "2026-06-12T06:30:13.377Z",
+      "mpesaResponse": {
+        "requestId": "309c-4340-8c53-e2d0ceff4ccd72223",
+        "errorCode": "400.002.02",
+        "errorMessage": "Bad Request - Invalid BusinessShortCode"
+      }
+    },
     {
       "id": "ord_045d7950d6b75d0f",
       "userId": "user_d623ac93d85fa603",
