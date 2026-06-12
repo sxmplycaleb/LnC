@@ -71,7 +71,7 @@ function applyTheme(theme) {
     const button = $("#themeToggleButton");
     if (button) {
         const nextTheme = state.theme === "light" ? "dark" : "light";
-        button.querySelector(".theme-icon").textContent = state.theme === "light" ? "🌙" : "☀️";
+        button.querySelector(".theme-icon").textContent = state.theme === "light";
         button.querySelector(".theme-label").textContent = state.theme === "light" ? "Dark Mode" : "Light Mode";
         button.setAttribute("title", `Switch to ${nextTheme} theme`);
         button.setAttribute("aria-label", `Switch to ${state.theme === "light" ? "dark" : "light"} theme`);

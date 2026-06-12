@@ -336,7 +336,7 @@ main {
 }
 
 .hero-panel-action {
-  min-height: auto;
+  min-height: 0;
 }
 
 .hero-panel .primary-button {
