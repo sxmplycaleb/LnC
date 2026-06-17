@@ -307,6 +307,139 @@
   ],
   "orders": [
     {
+      "id": "ord_05ecfe3a5e18273a",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "name": "Avery Admin",
+        "email": "admin@demo.com",
+        "role": "admin"
+      },
+      "items": [
+        {
+          "productId": "prod_6834913097d80a53",
+          "name": "Smoke Test Product",
+          "image": "https://www.pexels.com/license/",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "credit_card",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T15:42:04.204Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T15:42:04.204Z"
+        }
+      ],
+      "createdAt": "2026-06-17T15:42:04.204Z"
+    },
+    {
+      "id": "ord_c1148aa9d0a08566",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "name": "Avery Admin",
+        "email": "admin@demo.com",
+        "role": "admin"
+      },
+      "items": [
+        {
+          "productId": "prod_2e8b4d08b018d7dc",
+          "name": "Smoke Test Product",
+          "image": "https://www.pexels.com/license/",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "credit_card",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T15:40:26.053Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T15:40:26.053Z"
+        }
+      ],
+      "createdAt": "2026-06-17T15:40:26.053Z"
+    },
+    {
+      "id": "ord_6269c1c9adbb401d",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "name": "Avery Admin",
+        "email": "admin@demo.com",
+        "role": "admin"
+      },
+      "items": [
+        {
+          "productId": "prod_9da34196d915c9a2",
+          "name": "Smoke Test Product",
+          "image": "https://www.pexels.com/license/",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Shipped",
+      "paymentStatus": "Paid",
+      "paymentProvider": "credit_card",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T12:26:28.909Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T12:26:28.909Z"
+        },
+        {
+          "label": "Shipped",
+          "at": "2026-06-17T12:37:34.803Z"
+        }
+      ],
+      "createdAt": "2026-06-17T12:26:28.909Z"
+    },
+    {
       "id": "ord_ad0e22bcd9815faf",
       "userId": "user_d623ac93d85fa603",
       "customer": {
@@ -334,7 +467,7 @@
       "shipping": 12,
       "tax": 8,
       "total": 119.99,
-      "status": "Processing",
+      "status": "Shipped",
       "paymentStatus": "Pending",
       "paymentProvider": "m-pesa",
       "timeline": [
@@ -345,6 +478,10 @@
         {
           "label": "Payment confirmed",
           "at": "2026-06-17T11:46:27.936Z"
+        },
+        {
+          "label": "Shipped",
+          "at": "2026-06-17T12:37:49.448Z"
         }
       ],
       "createdAt": "2026-06-17T11:46:27.936Z",
@@ -516,7 +653,7 @@
       "shipping": 12,
       "tax": 1.6,
       "total": 33.59,
-      "status": "Processing",
+      "status": "Delivered",
       "paymentStatus": "Pending",
       "paymentProvider": "m-pesa",
       "timeline": [
@@ -527,6 +664,10 @@
         {
           "label": "Payment confirmed",
           "at": "2026-06-04T09:54:19.353Z"
+        },
+        {
+          "label": "Delivered",
+          "at": "2026-06-17T12:38:06.349Z"
         }
       ],
       "createdAt": "2026-06-04T09:54:19.353Z",

@@ -153,6 +153,71 @@ if (req.method === "POST" && url.pathname === "/api/auth/logout") {
   return sendJson(res, 200, { message: "Logged out successfully." });
 }
 
+if (req.method === "POST" && url.pathname === "/api/auth/forgot-password") {
+  const body = await readBody(req);
+  const db = readDb();
+  const user = (db.users || []).find((entry) => entry.email === body.email);
+
+  if (!user) {
+    return sendJson(res, 404, { error: "No account found for that email." });
+  }
+
+  const code = String(crypto.randomInt(100000, 999999));
+  user.passwordReset = {
+    codeHash: hashResetSecret(code),
+    expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString()
+  };
+  writeDb(db);
+
+  await sendWhatsAppResetCode(user, code);
+
+  return sendJson(res, 200, {
+    message: "Reset code sent to WhatsApp.",
+    ...(process.env.NODE_ENV === "production" ? {} : { resetCode: code })
+  });
+}
+
+if (req.method === "POST" && url.pathname === "/api/auth/verify-reset-code") {
+  const body = await readBody(req);
+  const db = readDb();
+  const user = (db.users || []).find((entry) => entry.email === body.email);
+
+  if (!user || !isValidReset(user.passwordReset) || hashResetSecret(body.code) !== user.passwordReset.codeHash) {
+    return sendJson(res, 400, { error: "Invalid or expired reset code." });
+  }
+
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  user.passwordReset.resetTokenHash = hashResetSecret(resetToken);
+  user.passwordReset.verifiedAt = new Date().toISOString();
+  writeDb(db);
+
+  return sendJson(res, 200, { resetToken });
+}
+
+if (req.method === "POST" && url.pathname === "/api/auth/reset-password") {
+  const body = await readBody(req);
+  const db = readDb();
+  const tokenHash = hashResetSecret(body.resetToken || "");
+  const user = (db.users || []).find((entry) => (
+    isValidReset(entry.passwordReset) && entry.passwordReset.resetTokenHash === tokenHash
+  ));
+
+  if (!user) {
+    return sendJson(res, 400, { error: "Invalid or expired reset token." });
+  }
+
+  if (!body.password || String(body.password).length < 6) {
+    return sendJson(res, 400, { error: "Password must be at least 6 characters." });
+  }
+
+  user.passwordHash = hashPassword(body.password);
+  delete user.passwordReset;
+  writeDb(db);
+
+  return sendJson(res, 200, { message: "Password updated." });
+}
+
 if (req.method === "POST" && url.pathname === "/api/mpesa/callback") {
   const body = await readBody(req);
   const callback = body.Body?.stkCallback;
@@ -493,6 +558,35 @@ function verifyPassword(password, passwordHash) {
     Buffer.from(originalHash, "hex"),
     Buffer.from(testHash, "hex")
   );
+}
+
+function hashResetSecret(value) {
+  return crypto.createHash("sha256").update(String(value || "")).digest("hex");
+}
+
+function isValidReset(reset) {
+  return Boolean(reset?.expiresAt && new Date(reset.expiresAt).getTime() > Date.now());
+}
+
+async function sendWhatsAppResetCode(user, code) {
+  const to = process.env.RESET_WHATSAPP_TO || process.env.ADMIN_WHATSAPP || "254790321533";
+  const message = `L&C password reset code for ${user.email}: ${code}. This code expires in 15 minutes.`;
+
+  if (process.env.WHATSAPP_WEBHOOK_URL) {
+    const response = await fetch(process.env.WHATSAPP_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ to, message, email: user.email })
+    });
+
+    if (!response.ok) {
+      throw new Error("Could not send WhatsApp reset code.");
+    }
+    return;
+  }
+
+  const link = `https://wa.me/${to}?text=${encodeURIComponent(message)}`;
+  console.log(`WhatsApp reset link for ${user.email}: ${link}`);
 }
 
 function publicUser(user) {

@@ -13,7 +13,9 @@ const state = {
     editProductId: null,
     theme: getInitialsTheme(),
     pendingCatalogRedirect: false,
-    redirectAfterDcashPopup: false
+    redirectAfterDcashPopup: false,
+    resetStep: "email",
+    resetToken: null
 };
 
 const $ = (selector) => document.querySelector(selector); 
@@ -66,36 +68,12 @@ function xhrApi(path, options = {}, body) {
 function applyTheme(theme) {
     state.theme = theme === "light" ? "light" : "dark";
     document.body.classList.toggle("dark", state.theme === "dark");
-
-    document.body.classList.toggle("dark", state.theme === "dark");
     document.documentElement.dataset.theme = state.theme;
 
     localStorage.setItem("commerce-theme", state.theme);
 
     const button = $("#themeToggleButton");
-    
-    if (button) {
-      const label = button.querySelector(".theme-label");
-      
-      if (label) {
-        label.textContent = state.theme === "light" ? "Dark" : "Light";
-      }
-      button.setAttribute(
-        "title",
-        `Switch to ${state.theme === "light" ? "dark" : "light"} theme`
-      );
-      
-      button.setAttribute(
-        "aria-label",
-        `Switch to ${state.theme === "light" ? "dark" : "light"} theme`
-      );
-      
-      button.setAttribute(
-        "aria-pressed",
-        state.theme === "dark"      
-      );
-}
-
+    if (!button) return;
     const label = button.querySelector(".theme-label");
     
     if (label) {
@@ -103,6 +81,10 @@ function applyTheme(theme) {
     } else {
       button.textContent = state.theme === "light" ? "Dark" : "Light";
     }
+
+    button.setAttribute("title", `Switch to ${state.theme === "light" ? "dark" : "light"} theme`);
+    button.setAttribute("aria-label", `Switch to ${state.theme === "light" ? "dark" : "light"} theme`);
+    button.setAttribute("aria-pressed", String(state.theme === "dark"));
 }
 
 function toggleTheme() {
@@ -145,8 +127,13 @@ async function cleanCartBeforeCheckout() {
 }
 
 function switchView(viewName) {
+  const targetView = $(`#${viewName}View`);
+  if (!targetView) {
+    if (viewName === "admin") location.href = "/?view=admin";
+    return;
+  }
   $$(".view").forEach((view) => view.classList.remove("active"));
-  $(`#${viewName}View`).classList.add("active");
+  targetView.classList.add("active");
   $$(".nav-tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.view === viewName));
   if (viewName === "orders") loadOrders();
   if (viewName === "admin") {
@@ -156,7 +143,18 @@ function switchView(viewName) {
 }
 
 function updateAuthUI() {
-  $("#authButton").textContent = state.user ? `${state.user.name} | Sign out` : "Sign in";
+  const signedOutMenu = $("#signedOutMenu");
+  const signedInMenu = $("#signedInMenu");
+  const avatar = $("#profileMenuButton");
+
+  if (signedOutMenu) signedOutMenu.classList.toggle("hidden", Boolean(state.user));
+  if (signedInMenu) signedInMenu.classList.toggle("hidden", !state.user);
+  if (avatar && state.user) {
+    avatar.textContent = getUserInitials(state.user);
+    avatar.title = state.user.name || state.user.email;
+  }
+
+  $$(".auth-only").forEach((node) => node.classList.toggle("hidden", !state.user));
   $$(".admin-only").forEach((node) => node.classList.toggle("hidden", state.user?.role !== "admin"));
 }
 
@@ -168,11 +166,11 @@ async function loadMe() {
 
 async function loadProducts() {
   const params = new URLSearchParams({
-    search: $("#searchInput").value,
-    category: $("#categorySelect").value,
-    maxPrice: $("#priceRange").value,
-    minRating: $("#ratingSelect").value,
-    inStock: $("#stockCheckbox").checked
+    search: $("#searchInput")?.value || "",
+    category: $("#categorySelect")?.value || "all",
+    maxPrice: $("#priceRange")?.value || "2000",
+    minRating: $("#ratingSelect")?.value || "0",
+    inStock: $("#stockCheckbox")?.checked || false
   });
   const data = await api(`/api/products?${params}`);
   state.products = data.products;
@@ -196,7 +194,7 @@ function renderProducts() {
   const visibleProducts = isCatalogPage ? state.products : state.products.slice(0, 6);
 
   $("#resultCount").textContent = `${state.products.length} item${visibleProducts.length === 1 ? "" : "s"}`;
-  $("#metricProducts").textContent = state.products.length;
+  if ($("#metricProducts")) $("#metricProducts").textContent = state.products.length;
 
   const grid = $("#productGrid");
 
@@ -228,6 +226,7 @@ function renderProducts() {
 function openProductDetail(productId) {
   const product = state.products.find((entry) => entry.id === productId);
   if (!product) return;
+  rememberRecentlyViewed(productId);
   const reviews = renderProductReviews(product.reviews);
   const tags = productTags(product).map((tag) => `<span class="pill">${escapeHtml(tag)}</span>`).join("");
   $("#productDetailContent").innerHTML = `
@@ -262,6 +261,39 @@ function openProductDetail(productId) {
 
 function closeProductDetail() {
   $("#productDetailModal").classList.add("hidden");
+}
+
+function rememberRecentlyViewed(productId) {
+  const current = JSON.parse(localStorage.getItem("commerce-recently-viewed") || "[]");
+  const next = [productId, ...current.filter((id) => id !== productId)].slice(0, 8);
+  localStorage.setItem("commerce-recently-viewed", JSON.stringify(next));
+}
+
+function showRecentlyViewed() {
+  const ids = JSON.parse(localStorage.getItem("commerce-recently-viewed") || "[]");
+  const products = ids.map((id) => state.products.find((product) => product.id === id)).filter(Boolean);
+  if (!products.length) {
+    toast("Recently viewed products will appear here after you open a product.");
+    return;
+  }
+
+  $("#productDetailContent").innerHTML = `
+    <div class="recently-viewed-panel">
+      <div class="section-heading">
+        <span>Recently viewed</span>
+        <strong>${products.length} item${products.length === 1 ? "" : "s"}</strong>
+      </div>
+      <div class="recently-viewed-list">
+        ${products.map((product) => `
+          <button class="recently-viewed-item" type="button" onclick="openProductDetail('${product.id}')">
+            <img src="${escapeAttr(productImageSrc(product))}" alt="${escapeAttr(product.name)}">
+            <span><strong>${escapeHtml(product.name)}</strong><small>${money(product.price)} | ${escapeHtml(product.category)}</small></span>
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+  $("#productDetailModal").classList.remove("hidden");
 }
 
 function productTags(product) {
@@ -333,7 +365,7 @@ function renderCart() {
   const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
   $("#cartCount").textContent = count;
   $("#cartTotal").textContent = money(currentCartTotal());
-  $("#metricCart").textContent = money(currentCartTotal());
+  if ($("#metricCart")) $("#metricCart").textContent = money(currentCartTotal());
   const items = $("#cartItems");
   if (!state.cart.length) {
     items.innerHTML = `<div class="wide-panel">Your cart is empty.</div>`;
@@ -487,6 +519,14 @@ function renderAdminProducts() {
   `).join("");
 }
 
+function setAdminPanel(panel) {
+  const selected = panel === "product" ? "product" : "inventory";
+  const adminView = $("#adminView");
+  if (adminView) adminView.dataset.activeSection = selected;
+  $$("[data-admin-panel]").forEach((button) => button.classList.toggle("active", button.dataset.adminPanel === selected));
+  $(`[data-admin-section="${selected}"]`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
 function editProduct(productId) {
   const product = state.products.find((entry) => entry.id === productId);
   if (!product) return;
@@ -499,8 +539,9 @@ function editProduct(productId) {
   $("#productPrice").value = product.price;
   $("#productStock").value = product.stock;
   $("#productRating").value = product.rating;
-  $("#productTags").value = (product.tags || []).join(", ");
+  $("#productTags").value = productTags(product).join(", ");
   $("#productImage").value = product.image;
+  setAdminPanel("product");
 }
 
 function resetProductForm() {
@@ -556,12 +597,85 @@ async function uploadProductImage(event) {
 
 function openAuth(mode = "login") {
   state.authMode = mode;
+  closeMenus();
   $("#authModal").classList.remove("hidden");
   const isRegister = mode === "register";
   $("#authTitle").textContent = isRegister ? "Create account" : "Sign in";
   $("#authSubmit").textContent = isRegister ? "Create account" : "Sign in";
   $("#toggleAuthMode").textContent = isRegister ? "Already have an account? Sign in" : "Need an account? Create one";
   $$(".register-only").forEach((node) => node.classList.toggle("hidden", !isRegister));
+}
+
+function openResetPassword() {
+  state.resetStep = "email";
+  state.resetToken = null;
+  $("#authModal")?.classList.add("hidden");
+  $("#resetModal")?.classList.remove("hidden");
+  $("#resetForm")?.reset();
+  updateResetPasswordUI();
+}
+
+function closeResetPassword() {
+  $("#resetModal")?.classList.add("hidden");
+}
+
+function updateResetPasswordUI() {
+  const codeField = $(".reset-code-field");
+  const passwordField = $(".reset-password-field");
+  const codeInput = $("#resetCode");
+  const passwordInput = $("#resetPassword");
+  const submit = $("#resetSubmit");
+  const help = $("#resetHelp");
+
+  codeField?.classList.toggle("hidden", state.resetStep === "email");
+  passwordField?.classList.toggle("hidden", state.resetStep !== "password");
+  if (codeInput) codeInput.required = state.resetStep === "code";
+  if (passwordInput) passwordInput.required = state.resetStep === "password";
+
+  if (state.resetStep === "email") {
+    if (submit) submit.textContent = "Send code";
+    if (help) help.textContent = "Enter your account email and we will send a reset code to WhatsApp.";
+  } else if (state.resetStep === "code") {
+    if (submit) submit.textContent = "Verify code";
+    if (help) help.textContent = "Enter the reset code sent to WhatsApp.";
+  } else {
+    if (submit) submit.textContent = "Update password";
+    if (help) help.textContent = "Enter a new password to finish resetting your account.";
+  }
+}
+
+async function submitResetPassword(event) {
+  event.preventDefault();
+  const email = $("#resetEmail")?.value;
+
+  if (state.resetStep === "email") {
+    await api("/api/auth/forgot-password", { method: "POST", body: { email } });
+    state.resetStep = "code";
+    updateResetPasswordUI();
+    toast("Reset code sent to WhatsApp.");
+    $("#resetCode")?.focus();
+    return;
+  }
+
+  if (state.resetStep === "code") {
+    const data = await api("/api/auth/verify-reset-code", {
+      method: "POST",
+      body: { email, code: $("#resetCode")?.value }
+    });
+    state.resetToken = data.resetToken;
+    state.resetStep = "password";
+    updateResetPasswordUI();
+    $("#resetPassword")?.focus();
+    return;
+  }
+
+  await api("/api/auth/reset-password", {
+    method: "POST",
+    body: { resetToken: state.resetToken, password: $("#resetPassword")?.value }
+  });
+  closeResetPassword();
+  openAuth("login");
+  toast("Password updated. Sign in with your new password.");
 }
 
 async function submitAuth(event) {
@@ -578,19 +692,115 @@ async function submitAuth(event) {
   updateAuthUI();
   toast(`Welcome, ${state.user.name}.`);
 
-  if (state.pendingCatalogRedirect) {
-    state.pendingCatalogRedirect = false;
-    state.redirectAfterDcashPopup = true;
-    showDcashPopup();
+  state.pendingCatalogRedirect = false;
+  if (state.user.role === "admin") {
+    if ($("#adminView")) {
+      switchView("admin");
+    } else {
+      location.href = "/?view=admin";
+    }
+    return;
   }
+
+  if (!location.pathname.includes("catalog.html")) {
+    location.href = "/catalog.html";
+    return;
+  }
+
+  switchView("shop");
 }
 
 async function logout() {
   await api("/api/auth/logout", { method: "POST" });
   state.user = null;
   updateAuthUI();
-  switchView("shop");
   toast("Signed out.");
+  location.href = "/";
+}
+
+function getUserInitials(user) {
+  const source = user?.name || user?.email || "A";
+  return source
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("") || "A";
+}
+
+function closeMenus() {
+  ["#accountMenu", "#profileMenu"].forEach((selector) => {
+    const menu = $(selector);
+    if (menu) menu.classList.add("hidden");
+  });
+  ["#accountMenuButton", "#profileMenuButton"].forEach((selector) => {
+    const button = $(selector);
+    if (button) button.setAttribute("aria-expanded", "false");
+  });
+}
+
+function toggleMenu(buttonSelector, menuSelector) {
+  const button = $(buttonSelector);
+  const menu = $(menuSelector);
+  if (!button || !menu) return;
+  const willOpen = menu.classList.contains("hidden");
+  closeMenus();
+  menu.classList.toggle("hidden", !willOpen);
+  button.setAttribute("aria-expanded", String(willOpen));
+}
+
+function requireSignin(message = "Sign in first.") {
+  if (state.user) return true;
+  openAuth("login");
+  toast(message);
+  return false;
+}
+
+function handleAccountAction(action) {
+  closeMenus();
+  if (action === "signin") {
+    openAuth("login");
+    return;
+  }
+
+  if (!requireSignin("Sign in to continue.")) return;
+
+  if (action === "orders" || action === "my-account") {
+    switchView(state.user.role === "admin" && action === "my-account" ? "admin" : "orders");
+    return;
+  }
+
+  if (action === "wishlist") {
+    toast("Wishlist will be available from your account soon.");
+  }
+}
+
+function handleProfileAction(action) {
+  closeMenus();
+  if (action === "signout") {
+    logout().catch((error) => toast(error.message));
+    return;
+  }
+
+  if (action === "profile") {
+    switchView(state.user?.role === "admin" ? "admin" : "orders");
+    return;
+  }
+
+  if (action === "recently-viewed") {
+    showRecentlyViewed();
+    return;
+  }
+
+  toast(`${action[0].toUpperCase()}${action.slice(1)} will be available soon.`);
+}
+
+function runSearchFrom(source) {
+  const topSearchInput = $("#topSearchInput");
+  const searchInput = $("#searchInput");
+  if (source === "top" && topSearchInput && searchInput) searchInput.value = topSearchInput.value;
+  if (source === "filter" && topSearchInput && searchInput) topSearchInput.value = searchInput.value;
+  loadProducts().catch((error) => toast(error.message));
 }
 
 function escapeHtml(value) {
@@ -660,41 +870,96 @@ function bindEvents() {
     });
   }
 
-  $$(".nav-tab").forEach((tab) => tab.addEventListener("click", () => switchView(tab.dataset.view)));
+  $$(".nav-tab").forEach((tab) => tab.addEventListener("click", () => {
+    if (!state.user) {
+      requireSignin("Sign in to view this section.");
+      return;
+    }
+    switchView(tab.dataset.view);
+  }));
+
+  const topSearchInput = $("#topSearchInput");
+  const searchInput = $("#searchInput");
+  if (topSearchInput && searchInput) {
+    topSearchInput.addEventListener("input", () => {
+      searchInput.value = topSearchInput.value;
+      loadProducts().catch((error) => toast(error.message));
+    });
+  }
+  $("#topSearchButton")?.addEventListener("click", () => runSearchFrom("top"));
+  $("#searchButton")?.addEventListener("click", () => runSearchFrom("filter"));
+
   ["searchInput", "categorySelect", "priceRange", "ratingSelect", "stockCheckbox"].forEach((id) => {
-    $(`#${id}`).addEventListener("input", () => {
-      $("#priceLabel").textContent = money($("#priceRange").value);
+    const node = $(`#${id}`);
+    if (!node) return;
+    node.addEventListener("input", () => {
+      if ($("#priceLabel") && $("#priceRange")) $("#priceLabel").textContent = money($("#priceRange").value);
+      if (id === "searchInput" && topSearchInput) topSearchInput.value = node.value;
       loadProducts().catch((error) => toast(error.message));
     });
   });
-  $("#themeToggleButton").addEventListener("click", () => {
-    applyTheme(state.theme === "light" ? "dark" : "light"); });
-  $("#cartButton").addEventListener("click", () => $("#cartDrawer").classList.add("open"));
-  $("#closeCartButton").addEventListener("click", () => $("#cartDrawer").classList.remove("open"));
-  $("#checkoutForm").addEventListener("submit", (event) => checkout(event).catch((error) => toast(error.message)));
-  $("#refreshOrdersButton").addEventListener("click", () => loadOrders().catch((error) => toast(error.message)));
-  $("#authButton").addEventListener("click", () => state.user ? logout().catch((error) => toast(error.message)) : openAuth("login"));
-  $("#closeAuthButton").addEventListener("click", () => $("#authModal").classList.add("hidden"));
-  $("#closeProductDetailButton").addEventListener("click", closeProductDetail);
-  $("#productDetailModal").addEventListener("click", (event) => { if (event.target.id === "productDetailModal") closeProductDetail(); });
-  $("#toggleAuthMode").addEventListener("click", () => openAuth(state.authMode === "login" ? "register" : "login"));
-  $("#authForm").addEventListener("submit", (event) => submitAuth(event).catch((error) => toast(error.message)));
-  $("#productForm").addEventListener("submit", (event) => saveProduct(event).catch((error) => toast(error.message)));
-  $("#resetProductForm").addEventListener("click", resetProductForm);
-  $("#imageUpload").addEventListener("change", (event) => uploadProductImage(event).catch((error) => toast(error.message)));
+
+  $("#themeToggleButton")?.addEventListener("click", () => {
+    applyTheme(state.theme === "light" ? "dark" : "light");
+  });
+
+  $("#cartButton")?.addEventListener("click", () => {
+    if (!requireSignin("Please sign in before opening your cart.")) return;
+    $("#cartDrawer").classList.add("open");
+  });
+
+  $("#accountMenuButton")?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleMenu("#accountMenuButton", "#accountMenu");
+  });
+  $("#profileMenuButton")?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleMenu("#profileMenuButton", "#profileMenu");
+  });
+
+  $$("[data-account-action]").forEach((button) => {
+    button.addEventListener("click", () => handleAccountAction(button.dataset.accountAction));
+  });
+  $$("[data-profile-action]").forEach((button) => {
+    button.addEventListener("click", () => handleProfileAction(button.dataset.profileAction));
+  });
+
+  document.addEventListener("click", closeMenus);
+  $$(".dropdown-menu").forEach((menu) => menu.addEventListener("click", (event) => event.stopPropagation()));
+
+  $("#closeCartButton")?.addEventListener("click", () => $("#cartDrawer").classList.remove("open"));
+  $("#checkoutForm")?.addEventListener("submit", (event) => checkout(event).catch((error) => toast(error.message)));
+  $("#refreshOrdersButton")?.addEventListener("click", () => loadOrders().catch((error) => toast(error.message)));
+  $("#closeAuthButton")?.addEventListener("click", () => $("#authModal").classList.add("hidden"));
+  $("#forgotPasswordButton")?.addEventListener("click", openResetPassword);
+  $("#closeResetButton")?.addEventListener("click", closeResetPassword);
+  $("#resetForm")?.addEventListener("submit", (event) => submitResetPassword(event).catch((error) => toast(error.message)));
+  $("#closeProductDetailButton")?.addEventListener("click", closeProductDetail);
+  $("#productDetailModal")?.addEventListener("click", (event) => { if (event.target.id === "productDetailModal") closeProductDetail(); });
+  $("#toggleAuthMode")?.addEventListener("click", () => openAuth(state.authMode === "login" ? "register" : "login"));
+  $("#authForm")?.addEventListener("submit", (event) => submitAuth(event).catch((error) => toast(error.message)));
+  $("#productForm")?.addEventListener("submit", (event) => saveProduct(event).catch((error) => toast(error.message)));
+  $("#resetProductForm")?.addEventListener("click", resetProductForm);
+  $$("[data-admin-panel]").forEach((button) => {
+    button.addEventListener("click", () => setAdminPanel(button.dataset.adminPanel));
+  });
+  $("#imageUpload")?.addEventListener("change", (event) => uploadProductImage(event).catch((error) => toast(error.message)));
 }
 
 async function init() {
   bindEvents();
   applyTheme(state.theme);
-  document.querySelector("#copyrightYear").textContent = new Date().getFullYear();
-  $("#priceLabel").textContent = money($("#priceRange").value);
+  if ($("#copyrightYear")) $("#copyrightYear").textContent = new Date().getFullYear();
+  if ($("#priceLabel") && $("#priceRange")) $("#priceLabel").textContent = money($("#priceRange").value);
   await loadMe();
   await loadProducts();
   const params = new URLSearchParams(location.search);
   if (params.get("order")) {
     toast(`Payment returned for ${params.get("order")}.`);
     switchView("orders");
+  }
+  if (params.get("view") === "admin" && state.user?.role === "admin") {
+    switchView("admin");
   }
 }
 

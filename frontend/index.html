@@ -21,9 +21,13 @@
                 <span>L&C Enterprise</span>
             </a>
             <nav class="nav-tabs" aria-label="Primary navigation">
-                <button class="nav-tab active" data-view="shop">Shop</button>                
-                <button class="nav-tab" data-view="orders">Orders</button>
-                <button class="nav-tab admin-only hidden" data-view="admin">Admin</button>
+                <div class="topbar-search search-control">
+                    <input id="topSearchInput" type="search" placeholder="Search Products, Brands and Categories..." aria-label="Search products, brands and categories">
+                    <button class="small-button search-button" id="topSearchButton" type="button">Search</button>
+                </div>
+                <button class="nav-tab auth-only hidden active" data-view="shop">Shop</button>
+                <button class="nav-tab auth-only hidden" data-view="orders">Orders</button>
+                <button class="nav-tab admin-only hidden" data-view="admin">Admin Dashboard</button>
             </nav>
             <div class="topbar-actions">
                 <button 
@@ -39,7 +43,26 @@
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
 
-                <button class="secondary-button" id="authButton">Login</button>
+                <div class="account-menu" id="signedOutMenu">
+                    <button class="secondary-button account-trigger" id="accountMenuButton" type="button" aria-expanded="false">Account</button>
+                    <div class="dropdown-menu hidden" id="accountMenu">
+                        <button class="primary-button" type="button" data-account-action="signin">Sign in</button>
+                        <button type="button" data-account-action="my-account">My account</button>
+                        <button type="button" data-account-action="orders">Orders</button>
+                        <button type="button" data-account-action="wishlist">Wishlist</button>
+                    </div>
+                </div>
+
+                <div class="account-menu hidden" id="signedInMenu">
+                    <button class="icon-button account-avatar" id="profileMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">A</button>
+                    <div class="dropdown-menu hidden" id="profileMenu">
+                        <button type="button" data-profile-action="profile">Profile</button>
+                        <button type="button" data-profile-action="recently-viewed">Recently viewed</button>
+                        <button type="button" data-profile-action="settings">Settings</button>
+                        <button type="button" data-profile-action="help">Help</button>
+                        <button type="button" data-profile-action="signout">Sign out</button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -61,19 +84,19 @@
                 <div class="hero-panel">
                     <div class="hero-panel-action">
                         <a href="/catalog.html" class="primary-button" id="shopNowButton">Shop Now</a>
-                    
-
-                    <a href="/dashboard.html" class="primary-button" id="dashboardButton">My Account</a>
-                </div>
-
-                    <div>
-                        <span class="metric" id="metricProducts">0</span>
-                        <span>Products live</span>
                     </div>
 
-                    <div>
-                        <span class="metric" id="metricCart">$0</span>
-                        <span>Cart value</span>
+                    <div class="hero-recommendation">
+                        <strong>Fresh picks daily</strong>
+                        <span>New arrivals, fast checkout, and order tracking in one place.</span>
+                        <button class="secondary-button" type="button" data-account-action="orders">Track orders</button>
+                    </div>
+
+                    <div class="hero-contact-actions">
+                        <a class="whatsapp-order-link" href="https://wa.me/254747690999?text=Hello%0AThank%20you%20for%20contacting%20us.%0AWe%20appreciate%20your%20feedback.%0AWarmest%20Regards%2C%0ATeam%20L%26C" target="_blank" rel="noopener noreferrer" aria-label="Order on WhatsApp">
+                            <span class="whatsapp-icon" aria-hidden="true">WA</span>
+                            <span><strong>WhatsApp</strong><small>Text to order</small></span>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -86,7 +109,10 @@
                             </div>
                             <label>
                                 Search
-                                <input id="searchInput" type="search" placeholder="Sneakers, bags, audio">
+                                <span class="search-control">
+                                    <input id="searchInput" type="search" placeholder="Sneakers, bags, audio">
+                                    <button class="small-button search-button" id="searchButton" type="button">Search</button>
+                                </span>
                             </label>
                             <label>
                                 Category
@@ -135,8 +161,20 @@
                     </section>
 
                     <section class="view" id="adminView">
+                        <div class="admin-panel-switch" role="group" aria-label="Admin panel">
+                            <button class="small-button active" type="button" data-admin-panel="inventory">Inventory</button>
+                            <button class="small-button" type="button" data-admin-panel="product">Add or Edit Product</button>
+                        </div>
                         <div class="admin-layout">
-                            <form class="admin-form" id="productForm">
+                            <div class="wide-panel admin-inventory-panel" data-admin-section="inventory">
+                                <div class="section-heading">
+                                    <span>Inventory</span>
+                                    <strong id="adminProductCount">0 products</strong>
+                                    
+                                </div>
+                                <div class="admin-product" id="adminProducts"></div>
+                            </div>
+                            <form class="admin-form" id="productForm" data-admin-section="product">
                                 <div class="section-heading">
                                     <span id="formTitle">Add New Product</span>
                                     <button class="secondary-button" type="button" id="resetProductForm">Reset</button>
@@ -160,14 +198,6 @@
                                 </label>
                                 <button class="primary-button" type="submit" id="saveProductButton">Save Product</button>
                             </form>
-                            <div class="wide-panel">
-                                <div class="section-heading">
-                                    <span>Inventory</span>
-                                    <strong id="adminProductCount">0 products</strong>
-                                    
-                                </div>
-                                <div class="admin-product" id="adminProducts"></div>
-                            </div>
                             <div class="wide-panel admin-orders-panel">
                                 <div class="section-heading">
                                     <span>Order Operations</span>
@@ -191,7 +221,7 @@
                     <span>Steam Drive, 88</span>
                     <span><a href="tel:+254790321533">+254790321533</a> 
                         <a href="tel:+254747690999">+254747690999</a></span>
-                    <span>WhatsApp: <a href="https://wa.me/254790321533" target="_blank" rel="noopener noreferrer">Chat with us on WhatsApp</a></span>
+                    <span>WhatsApp: <a href="https://wa.me/254747690999" target="_blank" rel="noopener noreferrer">Chat with us on WhatsApp</a></span>
                 </address>
                 <div class="footer-social">
                     <span class="footer-kicker">Follow Us</span>
@@ -201,7 +231,7 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="16.8" cy="7.2" r="1"/></svg>
                     </a>
 
-                    <a href="https://wa.me/254790321533" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
+                    <a href="https://wa.me/254747690999" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 19 7 15.6A7.3 7.3 0 1 1 10.4 17L5.5 19Z"/><path d="M9.5 8.8c.3-.4.6-.4.9 0l.7 1.1c.2.3.2.6 0 .9l-.3.4c.5.9 1.2 1.6 2.1 2.1l.4-.3c.3-.2.6-.2.9 0l1.1.7c.4.3.4.6 0 .9-.5.5-1.1.8-1.8.7-2.2-.3-4.5-2.6-4.8-4.8-.1-.7.2-1.3.8-1.7Z"/></svg>
                     </a>
 
@@ -244,7 +274,7 @@
 
                     
                     <!-- CREDIT CARD FIELDS -->
-                    <div id="cardFields" class="=hidden">
+                    <div id="cardFields" class="hidden">
 
                         <label>Card Number</label>
                         <input type="text" placeholder="1234 5678 9012 3456">
@@ -261,7 +291,7 @@
                     </div>
 
                     <!-- MPESA FIELDS -->
-                    <div id="mpesaFields" class="hidden"">
+                    <div id="mpesaFields" class="hidden">
 
                         <label>M-Pesa Phone Number</label>
                         <input id="mpesaPhone" type="tel" placeholder="2547XXXXXXXX">
@@ -329,13 +359,27 @@
                 <label>Password<input id="authPassword" type="password" autocomplete="current-password" required></label>
                 <button class="primary-button" type="submit" id="authSubmit">Login</button>
                 <button class="link-button" type="button" id="toggleAuthMode">Don't have an account? Register</button>
-                <button class="link-button" type="button">Forgot Password?</button>
+                <button class="link-button" type="button" id="forgotPasswordButton">Forgot Password?</button>
+            </form>
+        </div>
+
+        <div class="modal hidden" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+            <form class="auth-card" id="resetForm">
+                <div class="section-heading">
+                    <span id="resetTitle">Reset password</span>
+                    <button class="icon-button" type="button" id="closeResetButton" aria-label="Close reset modal" title="Close">x</button>
+                </div>
+                <p class="muted-copy" id="resetHelp">Enter your account email and we will send a reset code to WhatsApp.</p>
+                <label>Email<input id="resetEmail" type="email" autocomplete="email" required></label>
+                <label class="reset-code-field hidden">Reset code<input id="resetCode" inputmode="numeric" autocomplete="one-time-code"></label>
+                <label class="reset-password-field hidden">New password<input id="resetPassword" type="password" autocomplete="new-password"></label>
+                <button class="primary-button" type="submit" id="resetSubmit">Send code</button>
             </form>
         </div>
 
 
-        <div class="modal hidden" id="productDetailModal" role="dialog" aria-modal="true" aria-labelledby="productDetailTitle">
-            <div id="product-detail-card">
+        <div class="modal hidden detail-modal" id="productDetailModal" role="dialog" aria-modal="true" aria-labelledby="productDetailTitle">
+            <div class="product-detail-card">
                 <button class="icon-button detail-close" type="button" id="closeProductDetailButton" aria-label="Close product detail modal" title="Close">x</button>
                 <div id="productDetailContent"></div>
             </div>

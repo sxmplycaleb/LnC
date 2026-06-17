@@ -22,14 +22,17 @@
         </a>
 
         <nav class="nav-tabs" aria-label="Primary navigation">
-            <button class="nav-tab active" data-view="shop">Catalog</button>            
-            <button class="nav-tab" data-view="orders">Orders</button>
-            <button class="nav-tab admin-only hidden" data-view="admin">Admin</button>            
+            <div class="topbar-search search-control">
+                <input id="topSearchInput" type="search" placeholder="Search Products, Brands and Categories..." aria-label="Search products, brands and categories">
+                <button class="small-button search-button" id="topSearchButton" type="button">Search</button>
+            </div>
+            <button class="nav-tab auth-only hidden active" data-view="shop">Shop</button>
+            <button class="nav-tab auth-only hidden" data-view="orders">Orders</button>
+            <button class="nav-tab admin-only hidden" data-view="admin">Admin Dashboard</button>
         </nav>
 
         <div class="topbar-actions">
             <button class="theme-toggle" id="themeToggleButton" type="button" aria-label="Switch Theme">
-                <span class="theme-icon"aria-hidden="true"></span>
                 <span class="theme-label"></span>
             </button>
 
@@ -38,7 +41,26 @@
                 <span class="cart-count" id="cartCount">0</span> 
             </button>
 
-            <button class="secondary-button" id="authButton">Login</button>
+            <div class="account-menu" id="signedOutMenu">
+                <button class="secondary-button account-trigger" id="accountMenuButton" type="button" aria-expanded="false">Account</button>
+                <div class="dropdown-menu hidden" id="accountMenu">
+                    <button class="primary-button" type="button" data-account-action="signin">Sign in</button>
+                    <button type="button" data-account-action="my-account">My account</button>
+                    <button type="button" data-account-action="orders">Orders</button>
+                    <button type="button" data-account-action="wishlist">Wishlist</button>
+                </div>
+            </div>
+
+            <div class="account-menu hidden" id="signedInMenu">
+                <button class="icon-button account-avatar" id="profileMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">A</button>
+                <div class="dropdown-menu hidden" id="profileMenu">
+                    <button type="button" data-profile-action="profile">Profile</button>
+                    <button type="button" data-profile-action="recently-viewed">Recently viewed</button>
+                    <button type="button" data-profile-action="settings">Settings</button>
+                    <button type="button" data-profile-action="help">Help</button>
+                    <button type="button" data-profile-action="signout">Sign out</button>
+                </div>
+            </div>
         </div>             
                 
     </header>
@@ -53,7 +75,10 @@
 
             <label>
                 Search
-                <input id="searchInput" type="search" placeholder="Search products...">        
+                <span class="search-control">
+                    <input id="searchInput" type="search" placeholder="Search products...">
+                    <button class="small-button search-button" id="searchButton" type="button">Search</button>
+                </span>
             </label>
 
             <label>
@@ -107,8 +132,19 @@
     </section>
 
     <section class="view" id="adminView">
+        <div class="admin-panel-switch" role="group" aria-label="Admin panel">
+            <button class="small-button active" type="button" data-admin-panel="inventory">Inventory</button>
+            <button class="small-button" type="button" data-admin-panel="product">Add or Edit Product</button>
+        </div>
         <div class="admin-layout">
-            <form class="admin-form" id="productForm">
+            <div class="wide-panel admin-inventory-panel" data-admin-section="inventory">
+                <div class="section-heading">
+                    <span>Inventory</span>
+                    <strong id="adminProductCount">0 products</strong>
+                </div>
+                <div class="admin-product" id="adminProducts"></div>
+            </div>
+            <form class="admin-form" id="productForm" data-admin-section="product">
                 <div class="section-heading">
                     <span id="formTitle">Add New Product</span>
                     <button class="secondary-button" type="button" id="resetProductForm">Reset</button>
@@ -130,24 +166,15 @@
                     <label>Tags<input type="text" id="productTags" placeholder="travel, laptop, canvas"></label>
                 </div>
                 
-                <div class="split">
-                    <label>Image URL<input type="url" id="productImage" required placeholder="https://example.com/image.jpg"></label>
+                <label>Image URL<input type="url" id="productImage" required placeholder="https://example.com/image.jpg"></label>
 
-                    <label class="upload-drop">
-                        Upload Image
-                        <input type="file" id="imageUpload" accept="image/*">
-                    </label>
+                <label class="upload-drop">
+                    Upload Image
+                    <input type="file" id="imageUpload" accept="image/*">
+                </label>
 
-                    <button class="primary-button" type="submit" id="saveProductButton">Save Product</button>       
-                       
-                </form>
-                <div class="wide-panel">
-                    <div class="section-heading">
-                        <span>Inventory</span>
-                        <strong id="adminProductCount">0 products</strong>
-                    </div>
-                    <div class="admin-product" id="adminProducts"></div>
-                </div>
+                <button class="primary-button" type="submit" id="saveProductButton">Save Product</button>
+            </form>
 
                 <div class="wide-panel">
                     <div class="section-heading">
@@ -213,11 +240,26 @@
                 <label>Password<input id="authPassword" type="password" autocomplete="current-password" required></label>
 
                 <button class="primary-button" type="submit" id="authSubmit">Login</button>
-                <button class="link-button" type="button" id="toggleAuthMode">Don't have an account? Register</button>                   
+                <button class="link-button" type="button" id="toggleAuthMode">Don't have an account? Register</button>
+                <button class="link-button" type="button" id="forgotPasswordButton">Forgot Password?</button>                   
             </form>
         </div>
 
-        <div class="modal hidden" id="productDetailModal" role="dialog" aria-hidden="true">
+        <div class="modal hidden" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+            <form class="auth-card" id="resetForm">
+                <div class="section-heading">
+                    <span id="resetTitle">Reset password</span>
+                    <button class="icon-button" type="button" id="closeResetButton" aria-label="Close reset modal" title="Close">X</button>
+                </div>
+                <p class="muted-copy" id="resetHelp">Enter your account email and we will send a reset code to WhatsApp.</p>
+                <label>Email<input id="resetEmail" type="email" autocomplete="email" required></label>
+                <label class="reset-code-field hidden">Reset code<input id="resetCode" inputmode="numeric" autocomplete="one-time-code"></label>
+                <label class="reset-password-field hidden">New password<input id="resetPassword" type="password" autocomplete="new-password"></label>
+                <button class="primary-button" type="submit" id="resetSubmit">Send code</button>
+            </form>
+        </div>
+
+        <div class="modal hidden detail-modal" id="productDetailModal" role="dialog" aria-hidden="true">
             <div class="product-detail-card">
                 <button class="icon-button detail-close" type="button" id="closeProductDetailButton" aria-label="Close product details modal" title="Close">X</button>
                 <div id="productDetailContent"></div>        
@@ -228,7 +270,37 @@
 
     <footer class="site-footer">
         <div class="footer-panel">
-            <strong>&copy; <span id="copyrightYear"></span> L&C Enterprises. All rights reserved.</strong>
+            <div class="footer-brand">
+                <span class="footer-kicker">Stay Connected</span>
+                <strong>&copy; <span id="copyrightYear"></span> L&C Enterprises. All rights reserved.</strong>
+                <span>Serving customers with curated products, quick support, and simple checkout.</span>
+            </div>
+            <address class="footer-contact">
+                <span class="footer-kicker">Contact Us</span>
+                <span>Steam Drive, 88</span>
+                <span><a href="tel:+254790321533">+254790321533</a> <a href="tel:+254747690999">+254747690999</a></span>
+                <span>WhatsApp: <a href="https://wa.me/254790321533" target="_blank" rel="noopener noreferrer">Chat with us on WhatsApp</a></span>
+            </address>
+            <div class="footer-social">
+                <span class="footer-kicker">Follow Us</span>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/fans.of.caleb?igsh=MWUybGo3azY5NXAwbA==" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="16.8" cy="7.2" r="1"/></svg>
+                    </a>
+                    <a href="https://wa.me/254790321533" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 19 7 15.6A7.3 7.3 0 1 1 10.4 17L5.5 19Z"/><path d="M9.5 8.8c.3-.4.6-.4.9 0l.7 1.1c.2.3.2.6 0 .9l-.3.4c.5.9 1.2 1.6 2.1 2.1l.4-.3c.3-.2.6-.2.9 0l1.1.7c.4.3.4.6 0 .9-.5.5-1.1.8-1.8.7-2.2-.3-4.5-2.6-4.8-4.8-.1-.7.2-1.3.8-1.7Z"/></svg>
+                    </a>
+                    <a href="https://www.facebook.com/share/1B6xXmP99d/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.1 0-5 1.9-5 5v3H6v4h3v4h4v-4h3.2l.8-4h-4V9c0-.7.3-1 1-1Z"/></svg>
+                    </a>
+                    <a href="https://x.com/sxmplycaleb" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4.3l3.3 4.7L16.7 4H20l-5.8 6.7L20.5 20h-4.3l-3.7-5.3L7.9 20H4.5l6.3-7.3L5 4Z"/></svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@sxmplycaleb?_r=1&_t=ZS-96gVmON5zYG" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4c.5 2.4 2 3.9 4.5 4.3v3.4c-1.7 0-3.2-.5-4.5-1.4V16a4.8 4.8 0 1 1-4.8-4.8c.4 0 .8 0 1.1.1v3.6a1.5 1.5 0 1 0 .9 1.4V4H14Z"/></svg>
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
 
