@@ -26,14 +26,19 @@
                 <button class="nav-tab admin-only hidden" data-view="admin">Admin</button>
             </nav>
             <div class="topbar-actions">
-                <button class="theme-toggle" id="themeToggleButton" type="button" aria-label="Switch to light theme.">
-                    <span class="theme-icon" aria-hidden="true"></span>
-                    <span class="theme-label">Light</span>
+                <button 
+                    class="theme-toggle"
+                    id="themeToggleButton"
+                    type="button"
+                    aria-label="Switch to dark theme">
+                    <span class="theme-label">Dark</span>
                 </button>
-                <button class="icon-button" id="cartButton" aria-label="Open cart." title="Cart">
-                    <span class="icon" >Cart</span>
+
+                <button class="icon-button" id="cartButton" aria-label="Open Cart." title="Cart">
+                    <span class="icon">Cart</span>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
+
                 <button class="secondary-button" id="authButton">Login</button>
             </div>
         </header>
@@ -56,7 +61,10 @@
                 <div class="hero-panel">
                     <div class="hero-panel-action">
                         <a href="/catalog.html" class="primary-button" id="shopNowButton">Shop Now</a>
-                    </div>
+                    
+
+                    <a href="/dashboard.html" class="primary-button" id="dashboardButton">My Account</a>
+                </div>
 
                     <div>
                         <span class="metric" id="metricProducts">0</span>
@@ -155,7 +163,7 @@
                             <div class="wide-panel">
                                 <div class="section-heading">
                                     <span>Inventory</span>
-                                    <strong id="adminProductsCount">0 products</strong>
+                                    <strong id="adminProductCount">0 products</strong>
                                     
                                 </div>
                                 <div class="admin-product" id="adminProducts"></div>
@@ -163,7 +171,7 @@
                             <div class="wide-panel admin-orders-panel">
                                 <div class="section-heading">
                                     <span>Order Operations</span>
-                                    <strong id="adminOrdersCount">0 orders</strong>
+                                    <strong id="adminOrderCount">0 orders</strong>
                                 </div>
                                 <div class="orders-list" id="adminOrders"></div>
                             </div>

@@ -7,14 +7,17 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const { createUploadthingExpressHandler } = require("uploadthing/express");
 const { ourFileRouter } = require("./uploadthing");
-const { console } = require("inspector");
-const { timeStamp } = require("console");
+const { router: userRoutes } = require('./routes/users');
+const orderRoutes = require('./routes/orders');
 
 dotenv.config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
 
 const uploadthingHandler = createUploadthingExpressHandler({
   router: ourFileRouter,
@@ -26,7 +29,7 @@ app.use("/api/uploadthing", uploadthingHandler);
 
 const PORT = Number(process.env.PORT || 3000);
 const PUBLIC_DIR = path.join(__dirname, "..", "frontend");
-const DB_FILE = path.join(PUBLIC_DIR, "data", "db.json");
+const DB_FILE = path.join(__dirname, "..", "db.json");
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -71,6 +74,27 @@ function filterProducts(products, params) {
 }
 
 let currentUser = null; // In-memory user session (for demo purposes only)
+
+function getBearerUser(req) {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+
+  if (!token) return currentUser;
+
+  const db = readDb();
+  return (db.users || []).find((user) => user.id === token) || currentUser;
+}
+
+function requireAdmin(req, res) {
+  const user = getBearerUser(req);
+
+  if (user?.role !== "admin") {
+    sendJson(res, 403, { error: "Admin access required." });
+    return null;
+  }
+
+  return user;
+}
 
 async function handleApi(req, res, url) {
   if (req.method === "GET" && url.pathname === "/api/auth/me") {
@@ -155,6 +179,93 @@ if (req.method === "GET" && url.pathname === "/api/products") {
   const products = filterProducts(db.products || [], url.searchParams);
   const categories = [...new Set((db.products || []).map((product) => product.category))].sort();
   return sendJson(res, 200, { products, categories });    
+}
+
+if (req.method === "POST" && url.pathname === "/api/products") {
+  if (!requireAdmin(req, res)) return;
+
+  const body = await readBody(req);
+  const db = readDb();
+  const now = new Date().toISOString();
+  const product = {
+    id: `prod_${crypto.randomBytes(8).toString("hex")}`,
+    name: body.name,
+    category: body.category,
+    description: body.description,
+    price: Number(body.price || 0),
+    stock: Number(body.stock || 0),
+    rating: Number(body.rating || 0),
+    tags: Array.isArray(body.tags)
+      ? body.tags
+      : String(body.tags || "").split(",").map((tag) => tag.trim()).filter(Boolean),
+    image: body.image || "",
+    reviews: [],
+    createdAt: now,
+    updatedAt: now
+  };
+
+  db.products = db.products || [];
+  db.products.unshift(product);
+  writeDb(db);
+
+  return sendJson(res, 201, { product });
+}
+
+if (req.method === "PUT" && url.pathname.startsWith("/api/products/")) {
+  if (!requireAdmin(req, res)) return;
+
+  const productId = url.pathname.split("/").pop();
+  const body = await readBody(req);
+  const db = readDb();
+  const product = (db.products || []).find((entry) => entry.id === productId);
+
+  if (!product) {
+    return sendJson(res, 404, { error: "Product not found." });
+  }
+
+  ["name", "category", "description", "image"].forEach((key) => {
+    if (body[key] !== undefined) product[key] = body[key];
+  });
+
+  if (body.price !== undefined) product.price = Number(body.price);
+  if (body.stock !== undefined) product.stock = Number(body.stock);
+  if (body.rating !== undefined) product.rating = Number(body.rating);
+  if (body.tags !== undefined) {
+    product.tags = Array.isArray(body.tags)
+      ? body.tags
+      : String(body.tags).split(",").map((tag) => tag.trim()).filter(Boolean);
+  }
+
+  product.updatedAt = new Date().toISOString();
+  writeDb(db);
+
+  return sendJson(res, 200, { product });
+}
+
+if (req.method === "DELETE" && url.pathname.startsWith("/api/products/")) {
+  if (!requireAdmin(req, res)) return;
+
+  const productId = url.pathname.split("/").pop();
+  const db = readDb();
+  const originalLength = (db.products || []).length;
+  db.products = (db.products || []).filter((entry) => entry.id !== productId);
+
+  if (db.products.length === originalLength) {
+    return sendJson(res, 404, { error: "Product not found." });
+  }
+
+  writeDb(db);
+  return sendJson(res, 200, { message: "Product deleted." });
+}
+
+if (req.method === "POST" && url.pathname === "/api/uploads") {
+  const body = await readBody(req);
+
+  if (!body.dataUrl) {
+    return sendJson(res, 400, { error: "Missing image data." });
+  }
+
+  return sendJson(res, 201, { url: body.dataUrl });
 }
 
 if (req.method === "GET" && url.pathname === "/api/orders") {
@@ -252,16 +363,11 @@ if (req.method === "POST" && url.pathname === "/api/orders") {
     order.mpesaResponse = stk;
   }
 
-  db.orders.unshift(order);
-  writeDb(db);
-
-  return sendJson(res, 201, { order });
-}
-
 db.orders.unshift(order);
 writeDb(db);
 
 return sendJson(res, 201, { order });
+}
 
 if (req.method === "PUT" && url.pathname.startsWith("/api/orders/")) {
   if (currentUser?.role !== "admin") {
@@ -428,6 +534,8 @@ const server = http.createServer(async (req, res) => {
     sendJson(res, 500, { error: error.message || "Something went wrong." });
   }
 });
+
+console.log("Reached server.listen");
 
 server.listen(PORT, () => {
   console.log(`L&C Enterprise running at http://localhost:${PORT}`);

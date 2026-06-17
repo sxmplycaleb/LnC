@@ -40,7 +40,7 @@
       "category": "Electronics",
       "description": "Experience high-quality sound without the wires. These Bluetooth headphones offer a comfortable fit, long battery life, and superior audio performance for music lovers on the go.",
       "price": 99.99,
-      "stock": 50,
+      "stock": 49,
       "rating": 4.5,
       "tags": "electronics,audio,wireless",
       "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8ys0v3jwCTF6D4Ol9h23xm7RJM8UPeNGfvYBpI",
@@ -57,7 +57,7 @@
         }
       ],
       "createdAt": "2026-05-29T13:10:58.711Z",
-      "updatedAt": "2026-05-29T13:10:58.711Z"
+      "updatedAt": "2026-06-17T11:46:27.935Z"
     },
     {
       "id": "prod_581916a4af4ea8d3",
@@ -306,6 +306,140 @@
     }
   ],
   "orders": [
+    {
+      "id": "ord_ad0e22bcd9815faf",
+      "userId": "user_d623ac93d85fa603",
+      "customer": {
+        "id": "user_d623ac93d85fa603",
+        "name": "mekayla",
+        "email": "blueyy25@gmail.com",
+        "role": "customer"
+      },
+      "items": [
+        {
+          "productId": "prod_581916a4af4ea8d3",
+          "name": "Wireless Bluetooth Headphones",
+          "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8ys0v3jwCTF6D4Ol9h23xm7RJM8UPeNGfvYBpI",
+          "price": 99.99,
+          "quantity": 1,
+          "subtotal": 99.99
+        }
+      ],
+      "shippingAddress": {
+        "name": "Caleb Ong'au",
+        "address": "Steam Drive",
+        "city": "Nairobi"
+      },
+      "subtotal": 99.99,
+      "shipping": 12,
+      "tax": 8,
+      "total": 119.99,
+      "status": "Processing",
+      "paymentStatus": "Pending",
+      "paymentProvider": "m-pesa",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T11:46:27.936Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T11:46:27.936Z"
+        }
+      ],
+      "createdAt": "2026-06-17T11:46:27.936Z",
+      "mpesaResponse": {
+        "requestId": "54a8-432e-b302-cf1d90c609dd53466",
+        "errorCode": "400.002.02",
+        "errorMessage": "Bad Request - Invalid BusinessShortCode"
+      }
+    },
+    {
+      "id": "ord_367ae71f9fa1207b",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "name": "Avery Admin",
+        "email": "admin@demo.com",
+        "role": "admin"
+      },
+      "items": [
+        {
+          "productId": "prod_cbff5f91799be450",
+          "name": "Smoke Test Product",
+          "image": "https://www.pexels.com/license/",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "credit_card",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T11:42:35.087Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T11:42:35.087Z"
+        }
+      ],
+      "createdAt": "2026-06-17T11:42:35.087Z"
+    },
+    {
+      "id": "ord_a2dc1d4eb2600e4d",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "name": "Avery Admin",
+        "email": "admin@demo.com",
+        "role": "admin"
+      },
+      "items": [
+        {
+          "productId": "prod_8b62049c6401ae13",
+          "name": "Smoke Test Product",
+          "image": "https://www.pexels.com/license/",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "credit_card",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T11:41:49.351Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T11:41:49.351Z"
+        }
+      ],
+      "createdAt": "2026-06-17T11:41:49.351Z"
+    },
     {
       "id": "ord_9189dc2b2903aba0",
       "userId": "user_133d69f9a0ab2908",

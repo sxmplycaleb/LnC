@@ -66,16 +66,42 @@ function xhrApi(path, options = {}, body) {
 function applyTheme(theme) {
     state.theme = theme === "light" ? "light" : "dark";
     document.body.classList.toggle("dark", state.theme === "dark");
+
+    document.body.classList.toggle("dark", state.theme === "dark");
     document.documentElement.dataset.theme = state.theme;
+
     localStorage.setItem("commerce-theme", state.theme);
+
     const button = $("#themeToggleButton");
+    
     if (button) {
-        const nextTheme = state.theme === "light" ? "dark" : "light";
-        button.querySelector(".theme-icon").textContent = state.theme === "light";
-        button.querySelector(".theme-label").textContent = state.theme === "light" ? "Dark Mode" : "Light Mode";
-        button.setAttribute("title", `Switch to ${nextTheme} theme`);
-        button.setAttribute("aria-label", `Switch to ${state.theme === "light" ? "dark" : "light"} theme`);
-        button.setAttribute("aria-pressed", state.theme === "dark" ? "true" : "false");   
+      const label = button.querySelector(".theme-label");
+      
+      if (label) {
+        label.textContent = state.theme === "light" ? "Dark" : "Light";
+      }
+      button.setAttribute(
+        "title",
+        `Switch to ${state.theme === "light" ? "dark" : "light"} theme`
+      );
+      
+      button.setAttribute(
+        "aria-label",
+        `Switch to ${state.theme === "light" ? "dark" : "light"} theme`
+      );
+      
+      button.setAttribute(
+        "aria-pressed",
+        state.theme === "dark"      
+      );
+}
+
+    const label = button.querySelector(".theme-label");
+    
+    if (label) {
+      label.textContent = state.theme === "light" ? "Dark" : "Light";
+    } else {
+      button.textContent = state.theme === "light" ? "Dark" : "Light";
     }
 }
 
@@ -641,7 +667,8 @@ function bindEvents() {
       loadProducts().catch((error) => toast(error.message));
     });
   });
-  $("#themeToggleButton").addEventListener("click", toggleTheme);
+  $("#themeToggleButton").addEventListener("click", () => {
+    applyTheme(state.theme === "light" ? "dark" : "light"); });
   $("#cartButton").addEventListener("click", () => $("#cartDrawer").classList.add("open"));
   $("#closeCartButton").addEventListener("click", () => $("#cartDrawer").classList.remove("open"));
   $("#checkoutForm").addEventListener("submit", (event) => checkout(event).catch((error) => toast(error.message)));
