@@ -307,6 +307,49 @@
   ],
   "orders": [
     {
+      "id": "ord_900f373528871524",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "name": "Avery Admin",
+        "email": "admin@demo.com",
+        "role": "admin"
+      },
+      "items": [
+        {
+          "productId": "prod_bb42e035c72e86d8",
+          "name": "Smoke Test Product",
+          "image": "https://www.pexels.com/license/",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "credit_card",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T16:27:44.516Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T16:27:44.516Z"
+        }
+      ],
+      "createdAt": "2026-06-17T16:27:44.516Z"
+    },
+    {
       "id": "ord_05ecfe3a5e18273a",
       "userId": "admin_95a16bacf3bb869b",
       "customer": {
