@@ -2,7 +2,8 @@ const assert = require("assert");
 const { spawn } = require("child_process");
 const path = require("path");
 
-const BASE_URL = "http://localhost:3000";
+const TEST_PORT = process.env.SMOKE_TEST_PORT || "3055";
+const BASE_URL = `http://localhost:${TEST_PORT}`;
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -10,11 +11,11 @@ function wait(ms) {
 
 async function request(path, options = {}) {
   const response = await fetch(`${BASE_URL}${path}`, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
       ...(options.headers || {})
     },
-    ...options,
     body: options.body ? JSON.stringify(options.body) : undefined
   });
   const data = await response.json().catch(() => ({}));
@@ -41,7 +42,7 @@ async function main() {
     cwd: path.join(__dirname, "..", ".."),
     env: {
       ...process.env,
-      PORT: "3000",
+      PORT: TEST_PORT,
       APP_URL: BASE_URL
     },
     stdio: ["ignore", "pipe", "pipe"]
@@ -81,23 +82,26 @@ async function main() {
     });
     assert(created.product.id, "Expected created product");
 
-    const order = await request("/api/orders", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${login.token}` },
-      body: {
-        paymentMethod: "credit_card",
-        shippingAddress: { name: "Smoke Test", address: "1 Test Way", city: "Nairobi" },
-        items: [{ productId: created.product.id, quantity: 1 }]
-      }
-    });
-    assert(order.order.id, "Expected created order");
+    await assert.rejects(
+      () => request("/api/orders", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${login.token}` },
+        body: {
+          paymentMethod: "credit_card",
+          shippingAddress: { name: "Smoke Test", address: "1 Test Way", city: "Nairobi" },
+          items: [{ productId: created.product.id, quantity: 1 }]
+        }
+      }),
+      /Only confirmed M-Pesa checkout is enabled/,
+      "Expected unconfigured card checkout to be rejected"
+    );
 
     await request(`/api/products/${created.product.id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${login.token}` }
     });
 
-    console.log("Smoke test passed successfully. JWT login, admin CRUD, and checkout are working.");
+    console.log("Smoke test passed successfully. Login, admin CRUD, and payment enforcement are working.");
   } finally {
     server.kill();
     if (stderr) {

@@ -15,7 +15,9 @@ const state = {
     pendingCatalogRedirect: false,
     redirectAfterDcashPopup: false,
     resetStep: "email",
-    resetToken: null
+    resetToken: null,
+    signupStep: "details",
+    signupVerificationId: null
 };
 
 const $ = (selector) => document.querySelector(selector); 
@@ -127,6 +129,7 @@ async function cleanCartBeforeCheckout() {
 }
 
 function switchView(viewName) {
+  if (viewName === "cart") renderCart();
   const targetView = $(`#${viewName}View`);
   if (!targetView) {
     if (viewName === "admin") location.href = "/?view=admin";
@@ -363,15 +366,18 @@ function removeFromCart(productId) {
 
 function renderCart() {
   const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-  $("#cartCount").textContent = count;
-  $("#cartTotal").textContent = money(currentCartTotal());
+  if ($("#cartCount")) $("#cartCount").textContent = count;
+  if ($("#cartTotal")) $("#cartTotal").textContent = money(currentCartTotal());
+  if ($("#cartPageTotal")) $("#cartPageTotal").textContent = money(currentCartTotal());
   if ($("#metricCart")) $("#metricCart").textContent = money(currentCartTotal());
   const items = $("#cartItems");
+  const pageItems = $("#cartPageItems");
   if (!state.cart.length) {
-    items.innerHTML = `<div class="wide-panel">Your cart is empty.</div>`;
+    if (items) items.innerHTML = `<div class="wide-panel">Your cart is empty.</div>`;
+    if (pageItems) pageItems.innerHTML = `<div class="wide-panel">Your cart is empty.</div>`;
     return;
   }
-  items.innerHTML = state.cart.map((item) => {
+  const markup = state.cart.map((item) => {
     const product = state.products.find((entry) => entry.id === item.productId);
     if (!product) {
       return `
@@ -399,6 +405,8 @@ function renderCart() {
       </div>
     `;
   }).join("");
+  if (items) items.innerHTML = markup;
+  if (pageItems) pageItems.innerHTML = markup;
 }
 
 async function checkout(event) {
@@ -428,6 +436,17 @@ async function checkout(event) {
     return;
   }
 
+  if (paymentMethod.value !== "m-pesa") {
+    toast("Card and PayPal need real provider setup before orders can be accepted.");
+    return;
+  }
+
+  if (!$("#mpesaPhone")?.value && !state.user.phone) {
+    $("#mpesaPhone")?.focus();
+    toast("Enter the M-Pesa phone number.");
+    return;
+  }
+
   const body = {
     items: state.cart,
     paymentMethod: paymentMethod.value,
@@ -439,14 +458,11 @@ async function checkout(event) {
     }
   };
   const data = await api("/api/orders", { method: "POST", body });
-  state.cart = [];
-  persistCart();
-  await loadProducts();
-  $("#cartDrawer").classList.remove("open");
+  $("#cartDrawer")?.classList.remove("open");
   if (data.checkoutUrl) {
     location.href = data.checkoutUrl;
   } else {
-    toast(`Order ${data.order.id} placed.`);
+    toast(data.message || `Order ${data.order.id} placed.`);
     switchView("orders");
   }
 }
@@ -458,7 +474,7 @@ async function loadOrders() {
     return;
   }
   const data = await api("/api/orders");
-  list.innerHTML = renderOrders(data.orders, false);
+  list.innerHTML = renderOrders(data.orders, state.user.role === "admin");
 }
 
 async function loadAdminOrders() {
@@ -481,6 +497,10 @@ function renderOrders(orders, adminMode) {
       </div>
       <div class="order-items">
         ${order.items.map((item) => `<span>${item.quantity} x ${escapeHtml(item.name)} - ${money(item.subtotal)}</span>`).join("")}
+      </div>
+      <div class="order-line">
+        <span>${escapeHtml(order.paymentProvider)} payment</span>
+        <strong>${escapeHtml(order.paymentStatus || "Unknown")}</strong>
       </div>
       <div class="timeline">
         ${order.timeline.map((item) => `<span class="pill">${escapeHtml(item.label)}</span>`).join("")}
@@ -517,6 +537,21 @@ function renderAdminProducts() {
       </div>
     </div>
   `).join("");
+}
+
+async function loadSearchSuggestions(value) {
+  const query = String(value || "").trim();
+  const list = $("#searchSuggestions");
+  if (!list) return;
+  if (!query) {
+    list.innerHTML = "";
+    return;
+  }
+
+  const data = await api(`/api/products/suggestions?search=${encodeURIComponent(query)}`);
+  list.innerHTML = (data.suggestions || [])
+    .map((suggestion) => `<option value="${escapeAttr(suggestion)}"></option>`)
+    .join("");
 }
 
 function setAdminPanel(panel) {
@@ -597,13 +632,18 @@ async function uploadProductImage(event) {
 
 function openAuth(mode = "login") {
   state.authMode = mode;
+  state.signupStep = "details";
+  state.signupVerificationId = null;
   closeMenus();
   $("#authModal").classList.remove("hidden");
   const isRegister = mode === "register";
   $("#authTitle").textContent = isRegister ? "Create account" : "Sign in";
-  $("#authSubmit").textContent = isRegister ? "Create account" : "Sign in";
+  $("#authSubmit").textContent = isRegister ? "Send WhatsApp code" : "Sign in";
   $("#toggleAuthMode").textContent = isRegister ? "Already have an account? Sign in" : "Need an account? Create one";
   $$(".register-only").forEach((node) => node.classList.toggle("hidden", !isRegister));
+  $$(".signup-code-field").forEach((node) => node.classList.add("hidden"));
+  $("#authPhone")?.toggleAttribute("required", isRegister);
+  $("#authSignupCode")?.toggleAttribute("required", false);
 }
 
 function openResetPassword() {
@@ -646,10 +686,10 @@ function updateResetPasswordUI() {
 
 async function submitResetPassword(event) {
   event.preventDefault();
-  const email = $("#resetEmail")?.value;
+  const identifier = $("#resetIdentifier")?.value || $("#resetEmail")?.value;
 
   if (state.resetStep === "email") {
-    await api("/api/auth/forgot-password", { method: "POST", body: { email } });
+    await api("/api/auth/forgot-password", { method: "POST", body: { identifier } });
     state.resetStep = "code";
     updateResetPasswordUI();
     toast("Reset code sent to WhatsApp.");
@@ -660,7 +700,7 @@ async function submitResetPassword(event) {
   if (state.resetStep === "code") {
     const data = await api("/api/auth/verify-reset-code", {
       method: "POST",
-      body: { email, code: $("#resetCode")?.value }
+      body: { identifier, code: $("#resetCode")?.value }
     });
     state.resetToken = data.resetToken;
     state.resetStep = "password";
@@ -683,8 +723,24 @@ async function submitAuth(event) {
   const body = {
     name: $("#authName").value,
     email: $("#authEmail").value,
+    phone: $("#authPhone")?.value,
     password: $("#authPassword").value
   };
+  if (state.authMode === "register" && state.signupStep === "details") {
+    const data = await api("/api/auth/request-signup-code", { method: "POST", body });
+    state.signupStep = "code";
+    state.signupVerificationId = data.verificationId;
+    $$(".signup-code-field").forEach((node) => node.classList.remove("hidden"));
+    $("#authSignupCode")?.toggleAttribute("required", true);
+    $("#authSubmit").textContent = "Verify and create account";
+    toast("Signup code sent to WhatsApp.");
+    $("#authSignupCode")?.focus();
+    return;
+  }
+  if (state.authMode === "register") {
+    body.verificationId = state.signupVerificationId;
+    body.code = $("#authSignupCode")?.value;
+  }
   const path = state.authMode === "register" ? "/api/auth/register" : "/api/auth/login";
   const data = await api(path, { method: "POST", body });
   state.user = data.user;
@@ -770,6 +826,11 @@ function handleAccountAction(action) {
     return;
   }
 
+  if (action === "cart") {
+    switchView("cart");
+    return;
+  }
+
   if (action === "wishlist") {
     toast("Wishlist will be available from your account soon.");
   }
@@ -801,6 +862,13 @@ function runSearchFrom(source) {
   if (source === "top" && topSearchInput && searchInput) searchInput.value = topSearchInput.value;
   if (source === "filter" && topSearchInput && searchInput) topSearchInput.value = searchInput.value;
   loadProducts().catch((error) => toast(error.message));
+}
+
+function updatePaymentFields() {
+  const selected = $("#paymentMethod")?.value;
+  $("#cardFields")?.classList.toggle("hidden", selected !== "credit_card");
+  $("#mpesaFields")?.classList.toggle("hidden", selected !== "m-pesa");
+  $("#paypalFields")?.classList.toggle("hidden", selected !== "paypal");
 }
 
 function escapeHtml(value) {
@@ -883,6 +951,7 @@ function bindEvents() {
   if (topSearchInput && searchInput) {
     topSearchInput.addEventListener("input", () => {
       searchInput.value = topSearchInput.value;
+      loadSearchSuggestions(topSearchInput.value).catch(() => {});
       loadProducts().catch((error) => toast(error.message));
     });
   }
@@ -895,6 +964,7 @@ function bindEvents() {
     node.addEventListener("input", () => {
       if ($("#priceLabel") && $("#priceRange")) $("#priceLabel").textContent = money($("#priceRange").value);
       if (id === "searchInput" && topSearchInput) topSearchInput.value = node.value;
+      if (id === "searchInput") loadSearchSuggestions(node.value).catch(() => {});
       loadProducts().catch((error) => toast(error.message));
     });
   });
@@ -905,7 +975,12 @@ function bindEvents() {
 
   $("#cartButton")?.addEventListener("click", () => {
     if (!requireSignin("Please sign in before opening your cart.")) return;
-    $("#cartDrawer").classList.add("open");
+    if ($("#cartView")) switchView("cart");
+    else $("#cartDrawer")?.classList.add("open");
+  });
+  $("#openCheckoutButton")?.addEventListener("click", () => {
+    if (!requireSignin("Please sign in before checkout.")) return;
+    $("#cartDrawer")?.classList.add("open");
   });
 
   $("#accountMenuButton")?.addEventListener("click", (event) => {
@@ -929,6 +1004,7 @@ function bindEvents() {
 
   $("#closeCartButton")?.addEventListener("click", () => $("#cartDrawer").classList.remove("open"));
   $("#checkoutForm")?.addEventListener("submit", (event) => checkout(event).catch((error) => toast(error.message)));
+  $("#paymentMethod")?.addEventListener("change", updatePaymentFields);
   $("#refreshOrdersButton")?.addEventListener("click", () => loadOrders().catch((error) => toast(error.message)));
   $("#closeAuthButton")?.addEventListener("click", () => $("#authModal").classList.add("hidden"));
   $("#forgotPasswordButton")?.addEventListener("click", openResetPassword);
@@ -951,6 +1027,7 @@ async function init() {
   applyTheme(state.theme);
   if ($("#copyrightYear")) $("#copyrightYear").textContent = new Date().getFullYear();
   if ($("#priceLabel") && $("#priceRange")) $("#priceLabel").textContent = money($("#priceRange").value);
+  updatePaymentFields();
   await loadMe();
   await loadProducts();
   const params = new URLSearchParams(location.search);

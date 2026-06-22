@@ -22,12 +22,13 @@
             </a>
             <nav class="nav-tabs" aria-label="Primary navigation">
                 <div class="topbar-search search-control">
-                    <input id="topSearchInput" type="search" placeholder="Search Products, Brands and Categories..." aria-label="Search products, brands and categories">
+                    <input id="topSearchInput" type="search" list="searchSuggestions" placeholder="Search Products, Brands and Categories..." aria-label="Search products, brands and categories">
                     <button class="small-button search-button" id="topSearchButton" type="button">Search</button>
                 </div>
                 <button class="nav-tab auth-only hidden active" data-view="shop">Shop</button>
                 <button class="nav-tab auth-only hidden" data-view="orders">Orders</button>
-                <button class="nav-tab admin-only hidden" data-view="admin">Admin Dashboard</button>
+                <button class="nav-tab auth-only hidden" data-view="cart">Cart</button>
+                <datalist id="searchSuggestions"></datalist>
             </nav>
             <div class="topbar-actions">
                 <button 
@@ -84,6 +85,9 @@
                 <div class="hero-panel">
                     <div class="hero-panel-action">
                         <a href="/catalog.html" class="primary-button" id="shopNowButton">Shop Now</a>
+                        <a class="whatsapp-icon-link" href="https://wa.me/254747690999?text=Hello%20L%26C%20Enterprise%2C%20I%20would%20like%20to%20shop." target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+                            <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.03 3.2A12.7 12.7 0 0 0 5.14 22.45L3.2 29l6.72-1.86A12.69 12.69 0 1 0 16.03 3.2Zm0 2.31a10.38 10.38 0 0 1 8.76 15.94 10.38 10.38 0 0 1-13.96 3.32l-.48-.29-3.99 1.1 1.08-3.87-.31-.5A10.39 10.39 0 0 1 16.03 5.51Zm-4.36 5.69c-.24 0-.62.09-.95.45-.33.36-1.25 1.22-1.25 2.97s1.28 3.45 1.45 3.69c.18.24 2.47 3.96 6.1 5.39 3.02 1.19 3.64.95 4.3.89.66-.06 2.12-.87 2.42-1.7.3-.84.3-1.55.21-1.7-.09-.15-.33-.24-.69-.42-.36-.18-2.12-1.05-2.45-1.17-.33-.12-.57-.18-.81.18-.24.36-.93 1.17-1.14 1.41-.21.24-.42.27-.78.09-.36-.18-1.52-.56-2.9-1.79-1.07-.96-1.8-2.14-2.01-2.5-.21-.36-.02-.55.16-.73.16-.16.36-.42.54-.63.18-.21.24-.36.36-.6.12-.24.06-.45-.03-.63-.09-.18-.81-1.95-1.11-2.67-.29-.7-.59-.6-.81-.61h-.61Z"/></svg>
+                        </a>
                     </div>
 
                     <div class="hero-recommendation">
@@ -94,7 +98,7 @@
 
                     <div class="hero-contact-actions">
                         <a class="whatsapp-order-link" href="https://wa.me/254747690999?text=Hello%0AThank%20you%20for%20contacting%20us.%0AWe%20appreciate%20your%20feedback.%0AWarmest%20Regards%2C%0ATeam%20L%26C" target="_blank" rel="noopener noreferrer" aria-label="Order on WhatsApp">
-                            <span class="whatsapp-icon" aria-hidden="true">WA</span>
+                            <span class="whatsapp-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M16.03 3.2A12.7 12.7 0 0 0 5.14 22.45L3.2 29l6.72-1.86A12.69 12.69 0 1 0 16.03 3.2Zm0 2.31a10.38 10.38 0 0 1 8.76 15.94 10.38 10.38 0 0 1-13.96 3.32l-.48-.29-3.99 1.1 1.08-3.87-.31-.5A10.39 10.39 0 0 1 16.03 5.51Zm-4.36 5.69c-.24 0-.62.09-.95.45-.33.36-1.25 1.22-1.25 2.97s1.28 3.45 1.45 3.69c.18.24 2.47 3.96 6.1 5.39 3.02 1.19 3.64.95 4.3.89.66-.06 2.12-.87 2.42-1.7.3-.84.3-1.55.21-1.7-.09-.15-.33-.24-.69-.42-.36-.18-2.12-1.05-2.45-1.17-.33-.12-.57-.18-.81.18-.24.36-.93 1.17-1.14 1.41-.21.24-.42.27-.78.09-.36-.18-1.52-.56-2.9-1.79-1.07-.96-1.8-2.14-2.01-2.5-.21-.36-.02-.55.16-.73.16-.16.36-.42.54-.63.18-.21.24-.36.36-.6.12-.24.06-.45-.03-.63-.09-.18-.81-1.95-1.11-2.67-.29-.7-.59-.6-.81-.61h-.61Z"/></svg></span>
                             <span><strong>WhatsApp</strong><small>Text to order</small></span>
                         </a>
                     </div>
@@ -110,7 +114,7 @@
                             <label>
                                 Search
                                 <span class="search-control">
-                                    <input id="searchInput" type="search" placeholder="Sneakers, bags, audio">
+                                    <input id="searchInput" type="search" list="searchSuggestions" placeholder="Sneakers, bags, audio">
                                     <button class="small-button search-button" id="searchButton" type="button">Search</button>
                                 </span>
                             </label>
@@ -149,6 +153,17 @@
                             </label>                            
                         </aside>
                         <div class="product-grid" id="productGrid"></div>
+                    </section>
+
+                    <section class="view" id="cartView">
+                        <div class="wide-panel cart-page">
+                            <div class="section-heading">
+                                <span>Your Cart</span>
+                                <strong id="cartPageTotal">$0.00</strong>
+                            </div>
+                            <div id="cartPageItems" class="cart-items"></div>
+                            <button class="primary-button" type="button" id="openCheckoutButton">Checkout</button>
+                        </div>
                     </section>
 
                     <section class="view" id="ordersView">
@@ -355,6 +370,8 @@
                     <button class="icon-button" type="button" id="closeAuthButton" aria-label="Close auth modal" title="Close">x</button>
                 </div>
                 <label class="register-only hidden">Name<input id="authName" autocomplete="name"></label>
+                <label class="register-only hidden">WhatsApp Phone<input id="authPhone" type="tel" autocomplete="tel" placeholder="2547XXXXXXXX"></label>
+                <label class="signup-code-field hidden">WhatsApp Code<input id="authSignupCode" inputmode="numeric" autocomplete="one-time-code"></label>
                 <label>Email<input id="authEmail" type="email" autocomplete="email" required></label>
                 <label>Password<input id="authPassword" type="password" autocomplete="current-password" required></label>
                 <button class="primary-button" type="submit" id="authSubmit">Login</button>
@@ -369,8 +386,8 @@
                     <span id="resetTitle">Reset password</span>
                     <button class="icon-button" type="button" id="closeResetButton" aria-label="Close reset modal" title="Close">x</button>
                 </div>
-                <p class="muted-copy" id="resetHelp">Enter your account email and we will send a reset code to WhatsApp.</p>
-                <label>Email<input id="resetEmail" type="email" autocomplete="email" required></label>
+                <p class="muted-copy" id="resetHelp">Enter your account email or phone and we will send a reset code to WhatsApp.</p>
+                <label>Email or phone<input id="resetIdentifier" autocomplete="username" required></label>
                 <label class="reset-code-field hidden">Reset code<input id="resetCode" inputmode="numeric" autocomplete="one-time-code"></label>
                 <label class="reset-password-field hidden">New password<input id="resetPassword" type="password" autocomplete="new-password"></label>
                 <button class="primary-button" type="submit" id="resetSubmit">Send code</button>

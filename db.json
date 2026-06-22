@@ -35,12 +35,44 @@
   ],
   "products": [
     {
+      "id": "prod_082c7ad0641536a7",
+      "name": "Smoke Test Product",
+      "category": "Test",
+      "description": "Temporary product created by smoke test",
+      "price": 10,
+      "stock": 2,
+      "rating": 4.2,
+      "tags": [
+        "test"
+      ],
+      "image": "https://www.pexels.com/license/",
+      "reviews": [],
+      "createdAt": "2026-06-17T16:36:48.311Z",
+      "updatedAt": "2026-06-17T16:36:48.323Z"
+    },
+    {
+      "id": "prod_39e116395f56b13f",
+      "name": "Smoke Test Product",
+      "category": "Test",
+      "description": "Temporary product created by smoke test",
+      "price": 10,
+      "stock": 2,
+      "rating": 4.2,
+      "tags": [
+        "test"
+      ],
+      "image": "https://www.pexels.com/license/",
+      "reviews": [],
+      "createdAt": "2026-06-17T16:35:37.666Z",
+      "updatedAt": "2026-06-17T16:35:37.680Z"
+    },
+    {
       "id": "prod_581916a4af4ea8d3",
       "name": "Wireless Bluetooth Headphones",
       "category": "Electronics",
       "description": "Experience high-quality sound without the wires. These Bluetooth headphones offer a comfortable fit, long battery life, and superior audio performance for music lovers on the go.",
       "price": 99.99,
-      "stock": 49,
+      "stock": 48,
       "rating": 4.5,
       "tags": "electronics,audio,wireless",
       "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8ys0v3jwCTF6D4Ol9h23xm7RJM8UPeNGfvYBpI",
@@ -57,7 +89,7 @@
         }
       ],
       "createdAt": "2026-05-29T13:10:58.711Z",
-      "updatedAt": "2026-06-17T11:46:27.935Z"
+      "updatedAt": "2026-06-17T16:44:38.483Z"
     },
     {
       "id": "prod_581916a4af4ea8d3",
@@ -306,6 +338,140 @@
     }
   ],
   "orders": [
+    {
+      "id": "ord_bd2df17efb240dcd",
+      "userId": "user_d623ac93d85fa603",
+      "customer": {
+        "id": "user_d623ac93d85fa603",
+        "name": "mekayla",
+        "email": "blueyy25@gmail.com",
+        "role": "customer"
+      },
+      "items": [
+        {
+          "productId": "prod_581916a4af4ea8d3",
+          "name": "Wireless Bluetooth Headphones",
+          "image": "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8ys0v3jwCTF6D4Ol9h23xm7RJM8UPeNGfvYBpI",
+          "price": 99.99,
+          "quantity": 1,
+          "subtotal": 99.99
+        }
+      ],
+      "shippingAddress": {
+        "name": "Caleb Ong'au",
+        "address": "Steam Drive",
+        "city": "Nairobi"
+      },
+      "subtotal": 99.99,
+      "shipping": 12,
+      "tax": 8,
+      "total": 119.99,
+      "status": "Processing",
+      "paymentStatus": "Pending",
+      "paymentProvider": "m-pesa",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T16:44:38.483Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T16:44:38.483Z"
+        }
+      ],
+      "createdAt": "2026-06-17T16:44:38.483Z",
+      "mpesaResponse": {
+        "requestId": "eb45-43b3-a3d4-218ee9f921eb26475",
+        "errorCode": "400.002.02",
+        "errorMessage": "Bad Request - Invalid BusinessShortCode"
+      }
+    },
+    {
+      "id": "ord_bd94a88c10ed1713",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "name": "Avery Admin",
+        "email": "admin@demo.com",
+        "role": "admin"
+      },
+      "items": [
+        {
+          "productId": "prod_082c7ad0641536a7",
+          "name": "Smoke Test Product",
+          "image": "https://www.pexels.com/license/",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "credit_card",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T16:36:48.323Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T16:36:48.323Z"
+        }
+      ],
+      "createdAt": "2026-06-17T16:36:48.323Z"
+    },
+    {
+      "id": "ord_da7ae357b970ec55",
+      "userId": "admin_95a16bacf3bb869b",
+      "customer": {
+        "id": "admin_95a16bacf3bb869b",
+        "name": "Avery Admin",
+        "email": "admin@demo.com",
+        "role": "admin"
+      },
+      "items": [
+        {
+          "productId": "prod_39e116395f56b13f",
+          "name": "Smoke Test Product",
+          "image": "https://www.pexels.com/license/",
+          "price": 10,
+          "quantity": 1,
+          "subtotal": 10
+        }
+      ],
+      "shippingAddress": {
+        "name": "Smoke Test",
+        "address": "1 Test Way",
+        "city": "Nairobi"
+      },
+      "subtotal": 10,
+      "shipping": 12,
+      "tax": 0.8,
+      "total": 22.8,
+      "status": "Processing",
+      "paymentStatus": "Paid",
+      "paymentProvider": "credit_card",
+      "timeline": [
+        {
+          "label": "Order placed",
+          "at": "2026-06-17T16:35:37.680Z"
+        },
+        {
+          "label": "Payment confirmed",
+          "at": "2026-06-17T16:35:37.680Z"
+        }
+      ],
+      "createdAt": "2026-06-17T16:35:37.680Z"
+    },
     {
       "id": "ord_05ecfe3a5e18273a",
       "userId": "admin_95a16bacf3bb869b",
@@ -764,6 +930,16 @@
         }
       ],
       "createdAt": "2026-05-29T13:11:32.572Z"
+    }
+  ],
+  "signupVerifications": [
+    {
+      "id": "signup_8af8da705a465069",
+      "email": "sxmplycaleb@gmail.com",
+      "phone": "0790321533",
+      "codeHash": "d57cff652a00ab646e2db4e8a6c1591575fd0756c36358089b5c70268998260d",
+      "expiresAt": "2026-06-22T07:16:34.809Z",
+      "createdAt": "2026-06-22T07:01:34.809Z"
     }
   ]
 }

@@ -186,19 +186,31 @@ button {
 }
 
 .search-control {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 8px;
+  position: relative;
+  display: block;
   align-items: center;
   width: 100%;
+}
+
+.search-control input {
+  padding-right: 96px;
 }
 
 .topbar-search input {
   height: 40px;
   padding: 0 14px;
+  padding-right: 96px;
   color: var(--chrome-button-text);
   background: var(--chrome-button-bg);
   border-color: var(--chrome-button-border);
+}
+
+.search-control .search-button {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  height: calc(100% - 10px);
+  transform: translateY(-50%);
 }
 
 .nav-tab,
@@ -423,6 +435,10 @@ main {
 }
 
 .hero-panel-action {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  gap: 10px;
+  align-items: center;
   min-height: 0;
 }
 
@@ -473,8 +489,27 @@ main {
   color: #082d18;
   background: #25d366;
   border-radius: 50%;
-  font-size: 12px;
-  font-weight: 950;
+}
+
+.whatsapp-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.whatsapp-icon-link {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  color: #fff;
+  background: #25d366;
+  border-radius: 50%;
+  text-decoration: none;
+}
+
+.whatsapp-icon-link svg {
+  width: 30px;
+  height: 30px;
 }
 
 .hero-recommendation {
@@ -810,6 +845,16 @@ input[type="range"] {
 
 .admin-orders-panel {
   grid-column: 1 / -1;
+}
+
+.cart-page {
+  display: grid;
+  gap: 18px;
+  max-width: 860px;
+}
+
+.cart-page .primary-button {
+  width: min(260px, 100%);
 }
 
 .row-actions {
