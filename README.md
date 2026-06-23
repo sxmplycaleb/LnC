@@ -55,8 +55,3 @@ CLOUDINARY_API_SECRET=your-secret
 
 When `STRIPE_SECRET_KEY` is missing, checkout creates a demo paid order locally. When Cloudinary variables are missing, uploaded images are stored under `data/uploads` and served by the local server.
 
-## Deployment Notes
-
-- Vercel: use this as a Node server project or split the frontend into static hosting and backend into a serverless function.
-- Render: create a Web Service, set the start command to `npm start`, and add the environment variables above.
-- For production, replace the file-backed database with PostgreSQL, MongoDB, or another managed database.
