@@ -1818,7 +1818,7 @@ body.shop-transition-active .hero-band {
   }
 
   .hero-band {
-    min-height: auto;
+    min-height: 0;
   }
 
   .hero-showcase {
