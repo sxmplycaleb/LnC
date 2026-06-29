@@ -1,16 +1,17 @@
 const fs = require("fs");
 const path = require("path");
 const Database = require("better-sqlite3");
+const config = require("../config");
 
-const DEFAULT_DB_FILE = path.join(__dirname, "..", "..", "data", "commerce.sqlite");
-const SEED_FILE = path.join(__dirname, "..", "..", "db.json");
-const DB_FILE = process.env.SQLITE_DB_FILE || DEFAULT_DB_FILE;
+const SEED_FILE = path.join(config.rootDir, "db.json");
+const DB_FILE = config.sqliteFile;
 
 fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
 
 const db = new Database(DB_FILE);
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
+db.pragma(`busy_timeout = ${config.sqliteBusyTimeoutMs}`);
 
 function json(value, fallback = null) {
   if (value === undefined) return fallback === null ? null : JSON.stringify(fallback);
@@ -28,11 +29,18 @@ function parseJson(value, fallback) {
 
 function createSchema() {
   db.exec(`
+    CREATE TABLE IF NOT EXISTS schema_migrations (
+      version INTEGER PRIMARY KEY,
+      name TEXT NOT NULL,
+      applied_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       email TEXT NOT NULL UNIQUE,
       name TEXT NOT NULL,
       phone TEXT,
+      phone_normalized TEXT,
       role TEXT NOT NULL DEFAULT 'customer',
       password_hash TEXT NOT NULL,
       dob TEXT,
@@ -42,8 +50,13 @@ function createSchema() {
       phone_verified_at TEXT,
       email_verified_at TEXT,
       password_reset_json TEXT,
+      reset_token_hash TEXT,
+      reset_expires_at TEXT,
       created_at TEXT NOT NULL
     );
+
+    CREATE INDEX IF NOT EXISTS idx_users_phone_normalized ON users(phone_normalized);
+    CREATE INDEX IF NOT EXISTS idx_users_reset_token_hash ON users(reset_token_hash);
 
     CREATE TABLE IF NOT EXISTS products (
       id TEXT PRIMARY KEY,
@@ -61,6 +74,10 @@ function createSchema() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
+    CREATE INDEX IF NOT EXISTS idx_products_price ON products(price);
+    CREATE INDEX IF NOT EXISTS idx_products_rating ON products(rating);
+    CREATE INDEX IF NOT EXISTS idx_products_stock ON products(stock);
+    CREATE INDEX IF NOT EXISTS idx_products_created_at ON products(created_at);
 
     CREATE TABLE IF NOT EXISTS orders (
       id TEXT PRIMARY KEY,
@@ -103,6 +120,87 @@ function createSchema() {
   `);
 }
 
+function columnExists(table, column) {
+  return db.prepare(`PRAGMA table_info(${table})`).all().some((row) => row.name === column);
+}
+
+function addColumnIfMissing(table, definition) {
+  const column = definition.split(/\s+/)[0];
+  if (!columnExists(table, column)) {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${definition}`);
+  }
+}
+
+function normalizePhone(phone) {
+  return String(phone || "").replace(/[^\d]/g, "");
+}
+
+function migrateUserLookupColumns() {
+  addColumnIfMissing("users", "phone_normalized TEXT");
+  addColumnIfMissing("users", "reset_token_hash TEXT");
+  addColumnIfMissing("users", "reset_expires_at TEXT");
+
+  const users = db.prepare("SELECT id, phone, password_reset_json FROM users").all();
+  const updateUser = db.prepare(`
+    UPDATE users
+    SET phone_normalized = @phoneNormalized,
+        reset_token_hash = @resetTokenHash,
+        reset_expires_at = @resetExpiresAt
+    WHERE id = @id
+  `);
+
+  for (const user of users) {
+    const reset = parseJson(user.password_reset_json, null);
+    updateUser.run({
+      id: user.id,
+      phoneNormalized: normalizePhone(user.phone) || null,
+      resetTokenHash: reset?.resetTokenHash || null,
+      resetExpiresAt: reset?.expiresAt || null
+    });
+  }
+}
+
+const MIGRATIONS = [
+  {
+    version: 1,
+    name: "add_normalized_user_lookup_columns",
+    up: migrateUserLookupColumns
+  },
+  {
+    version: 2,
+    name: "add_query_indexes",
+    up() {
+      db.exec(`
+        CREATE INDEX IF NOT EXISTS idx_users_phone_normalized ON users(phone_normalized);
+        CREATE INDEX IF NOT EXISTS idx_users_reset_token_hash ON users(reset_token_hash);
+        CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
+        CREATE INDEX IF NOT EXISTS idx_products_price ON products(price);
+        CREATE INDEX IF NOT EXISTS idx_products_rating ON products(rating);
+        CREATE INDEX IF NOT EXISTS idx_products_stock ON products(stock);
+        CREATE INDEX IF NOT EXISTS idx_products_created_at ON products(created_at);
+        CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
+        CREATE INDEX IF NOT EXISTS idx_orders_mpesa_checkout ON orders(mpesa_checkout_request_id);
+      `);
+    }
+  }
+];
+
+function runMigrations() {
+  const hasMigration = db.prepare("SELECT 1 FROM schema_migrations WHERE version = ?").pluck();
+  const insertMigration = db.prepare(`
+    INSERT INTO schema_migrations (version, name, applied_at)
+    VALUES (?, ?, ?)
+  `);
+
+  for (const migration of MIGRATIONS) {
+    if (hasMigration.get(migration.version)) continue;
+    db.transaction(() => {
+      migration.up();
+      insertMigration.run(migration.version, migration.name, new Date().toISOString());
+    })();
+  }
+}
+
 function rowCount(table) {
   return db.prepare(`SELECT COUNT(*) AS count FROM ${table}`).get().count;
 }
@@ -113,11 +211,11 @@ function seedFromJson() {
   const seed = JSON.parse(fs.readFileSync(SEED_FILE, "utf8"));
   const insertUser = db.prepare(`
     INSERT INTO users (
-      id, email, name, phone, role, password_hash, dob, gender, username, bio,
-      phone_verified_at, email_verified_at, password_reset_json, created_at
+      id, email, name, phone, phone_normalized, role, password_hash, dob, gender, username, bio,
+      phone_verified_at, email_verified_at, password_reset_json, reset_token_hash, reset_expires_at, created_at
     ) VALUES (
-      @id, @email, @name, @phone, @role, @passwordHash, @dob, @gender, @username, @bio,
-      @phoneVerifiedAt, @emailVerifiedAt, @passwordResetJson, @createdAt
+      @id, @email, @name, @phone, @phoneNormalized, @role, @passwordHash, @dob, @gender, @username, @bio,
+      @phoneVerifiedAt, @emailVerifiedAt, @passwordResetJson, @resetTokenHash, @resetExpiresAt, @createdAt
     )
   `);
   const insertProduct = db.prepare(`
@@ -152,16 +250,20 @@ function seedFromJson() {
 
   db.transaction(() => {
     for (const user of seed.users || []) {
+      const passwordReset = user.passwordReset || null;
       insertUser.run({
         ...user,
         phone: user.phone || null,
+        phoneNormalized: normalizePhone(user.phone) || null,
         dob: user.dob || null,
         gender: user.gender || null,
         username: user.username || null,
         bio: user.bio || null,
         phoneVerifiedAt: user.phoneVerifiedAt || null,
         emailVerifiedAt: user.emailVerifiedAt || null,
-        passwordResetJson: json(user.passwordReset),
+        passwordResetJson: json(passwordReset),
+        resetTokenHash: passwordReset?.resetTokenHash || null,
+        resetExpiresAt: passwordReset?.expiresAt || null,
         createdAt: user.createdAt || new Date().toISOString()
       });
     }
@@ -208,6 +310,7 @@ function seedFromJson() {
 }
 
 createSchema();
+runMigrations();
 seedFromJson();
 
 module.exports = {

@@ -106,6 +106,11 @@ async function main() {
 
     const catalog = await request("/api/products");
     assert(catalog.products.length >= 1, "Expected seeded products");
+    assert(catalog.pagination, "Expected product pagination metadata");
+
+    const filteredCatalog = await request("/api/products?search=smoke&limit=1");
+    assert.equal(filteredCatalog.products.length, 0, "Search should run through the SQL filter path");
+    assert.equal(filteredCatalog.pagination.limit, 1, "Explicit product limit should be reflected in metadata");
 
     await assertRejectsStatus(() => request("/api/auth/me"), 401);
     await assertRejectsStatus(() => request("/api/orders"), 401);
@@ -133,6 +138,9 @@ async function main() {
     });
     assert.equal(admin.user.role, "admin", "Expected admin role");
     assert.equal(customer.user.role, "customer", "Expected customer role");
+
+    const phoneLogin = await login("254700000002", "Customer123!");
+    assert.equal(phoneLogin.user.email, "smoke.customer@example.com", "Normalized phone login should resolve indexed user lookup");
 
     const adminMe = await request("/api/auth/me", { headers: bearer(admin.token) });
     const customerMe = await request("/api/auth/me", { headers: bearer(customer.token) });

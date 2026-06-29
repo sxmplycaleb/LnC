@@ -1,6 +1,6 @@
 {
   "name": "e-commerce-web-app",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Full-stack e-commerce web application with JWT auth, product management, cart checkout, order tracking, and optional Stripe/Cloudinary integrations.",
   "main": "backend/server.js",
   "scripts": {

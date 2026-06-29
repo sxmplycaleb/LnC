@@ -2,54 +2,27 @@ const crypto = require("crypto");
 const productsRepository = require("../repositories/products");
 const { notFound } = require("../http/errors");
 
-function productTags(product) {
-  if (Array.isArray(product.tags)) return product.tags;
-  return String(product.tags || "").split(",").map((tag) => tag.trim()).filter(Boolean);
-}
-
-function productText(product) {
-  return `${product.name} ${product.category} ${product.description} ${productTags(product).join(" ")}`.toLowerCase();
-}
-
 function parseTags(tags) {
   return Array.isArray(tags)
     ? tags
     : String(tags || "").split(",").map((tag) => tag.trim()).filter(Boolean);
 }
 
-function filterProducts(products, query) {
-  const search = String(query.search || "").toLowerCase();
-  const category = query.category || "all";
-  const maxPrice = Number(query.maxPrice || Infinity);
-  const minRating = Number(query.minRating || 0);
-  const inStock = query.inStock === "true";
-
-  return products.filter((product) => (
-    (!search || productText(product).includes(search)) &&
-    (category === "all" || !category || product.category === category) &&
-    product.price <= maxPrice &&
-    product.rating >= minRating &&
-    (!inStock || product.stock > 0)
-  ));
-}
-
 function listProducts(query) {
-  const products = productsRepository.all();
-  const categories = [...new Set(products.map((product) => product.category))].sort();
+  const result = productsRepository.list(query);
   return {
-    products: filterProducts(products, query),
-    categories
+    products: result.products,
+    categories: productsRepository.categories(),
+    pagination: {
+      total: result.total,
+      page: result.page,
+      limit: result.limit
+    }
   };
 }
 
 function suggestions(query) {
-  const search = String(query.search || "").trim().toLowerCase();
-  return productsRepository.all()
-    .filter((product) => search && productText(product).includes(search))
-    .flatMap((product) => [product.name, product.category, ...productTags(product)])
-    .filter(Boolean)
-    .filter((value, index, values) => values.findIndex((entry) => entry.toLowerCase() === value.toLowerCase()) === index)
-    .slice(0, 8);
+  return productsRepository.suggestions(query.search);
 }
 
 function createProduct(body) {

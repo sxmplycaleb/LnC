@@ -1,11 +1,8 @@
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const config = require("../config");
 
 const TOKEN_TTL = "7d";
-
-function jwtSecret() {
-  return process.env.JWT_SECRET || "your-secret-key";
-}
 
 function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
   const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
@@ -50,13 +47,13 @@ function publicUser(user) {
 function createAuthToken(user) {
   return jwt.sign(
     { sub: user.id, role: user.role },
-    jwtSecret(),
+    config.jwtSecret(),
     { expiresIn: TOKEN_TTL }
   );
 }
 
 function verifyAuthToken(token) {
-  return jwt.verify(token, jwtSecret());
+  return jwt.verify(token, config.jwtSecret());
 }
 
 module.exports = {

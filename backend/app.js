@@ -4,6 +4,7 @@ const path = require("path");
 const cors = require("cors");
 const { createUploadthingExpressHandler } = require("uploadthing/express");
 const { ourFileRouter } = require("./uploadthing");
+const config = require("./config");
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const orderRoutes = require("./routes/orders");
@@ -41,8 +42,14 @@ function serveStatic(req, res) {
 function createApp() {
   const app = express();
 
-  app.use(cors());
-  app.use(express.json({ limit: "12mb" }));
+  app.use((req, res, next) => {
+    req.requestId = req.headers["x-request-id"] || `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+    res.setHeader("X-Request-Id", req.requestId);
+    next();
+  });
+
+  app.use(cors({ origin: config.corsOrigin }));
+  app.use(express.json({ limit: config.jsonBodyLimit }));
 
   app.use("/api/auth", authRoutes);
   app.use("/api/products", productRoutes);
@@ -67,8 +74,11 @@ function createApp() {
 
   app.use((error, req, res, next) => {
     const statusCode = error.statusCode || 500;
-    if (statusCode >= 500) console.error(error);
-    res.status(statusCode).json({ error: error.message || "Something went wrong." });
+    if (statusCode >= 500) console.error({ requestId: req.requestId, error });
+    res.status(statusCode).json({
+      error: error.message || "Something went wrong.",
+      requestId: req.requestId
+    });
   });
 
   return app;

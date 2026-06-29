@@ -25,9 +25,11 @@ function currentUser(user) {
 
 function updateProfile(user, body) {
   const name = String(body.name || user.name || "").trim();
+  const phone = body.phone || user.phone;
   return publicUser(users.updateProfile(user.id, {
     name,
-    phone: body.phone || user.phone,
+    phone,
+    phoneNormalized: normalizePhone(phone) || null,
     dob: body.dob || "",
     gender: body.gender || "",
     username: body.username || "",
@@ -103,6 +105,7 @@ function register(body) {
     name: body.name || "Customer",
     email,
     phone,
+    phoneNormalized: phone,
     phoneVerifiedAt: new Date().toISOString(),
     passwordHash: hashPassword(body.password),
     role: "customer",
