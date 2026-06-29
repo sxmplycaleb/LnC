@@ -39,6 +39,10 @@ function findByEmail(email) {
   return toUser(db.prepare("SELECT * FROM users WHERE lower(email) = lower(?)").get(email));
 }
 
+function all() {
+  return db.prepare("SELECT * FROM users ORDER BY created_at DESC").all().map(toUser);
+}
+
 function create(user) {
   db.prepare(`
     INSERT INTO users (
@@ -116,6 +120,7 @@ function findByResetTokenHash(tokenHash, isValidTimedSecret) {
 }
 
 module.exports = {
+  all,
   byIdentifier,
   findById,
   findByEmail,

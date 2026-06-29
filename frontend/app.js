@@ -979,11 +979,7 @@ async function submitAuth(event) {
 
   state.pendingCatalogRedirect = false;
   if (state.user.role === "admin") {
-    if ($("#adminView")) {
-      switchView("admin");
-    } else {
-      location.href = "/?view=admin";
-    }
+    location.href = "/admin/index.html#overview";
     return;
   }
 

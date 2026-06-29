@@ -7,32 +7,38 @@
   <link rel="stylesheet" href="/admin/styles.css">
 </head>
 <body data-page="dashboard">
-  <div class="app-shell">
-    <aside class="sidebar">
-      <a class="brand" href="/admin/index.html"><span class="brand-mark">L&C</span><span class="nav-label">Admin</span></a>
-      <nav class="nav" aria-label="Dashboard navigation">
-        <a class="active" href="/admin/index.html" title="Overview"><span class="icon">◆</span><span class="nav-label">Overview</span></a>
-        <a href="#products" title="Products"><span class="icon">◈</span><span class="nav-label">Products</span></a>
-        <a href="#orders" title="Orders"><span class="icon">◇</span><span class="nav-label">Orders</span></a>
-        <a href="#users" title="Users"><span class="icon">◎</span><span class="nav-label">Users</span></a>
-        <a href="#settings" title="Settings"><span class="icon">◌</span><span class="nav-label">Settings</span></a>
-      </nav>
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head">
+        <a class="brand" href="#overview" aria-label="L&C Admin overview">
+          <span class="brand-mark">L&C</span>
+          <span class="nav-label">Admin</span>
+        </a>
+        <button class="icon-button sidebar-close" id="mobileSidebarClose" type="button" aria-label="Close sidebar">X</button>
+      </div>
+      <nav class="nav" id="sidebarNav" aria-label="Admin navigation"></nav>
     </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
     <main class="main">
-      <p class="welcome-header" id="welcomeHeader">Welcome</p>
       <header class="topbar">
         <div class="topbar-left">
-          <button class="icon-button" id="sidebarToggle" type="button" aria-label="Toggle sidebar">☰</button>
+          <button class="icon-button" id="sidebarToggle" type="button" aria-label="Toggle sidebar">=</button>
           <div>
-            <h1>Dashboard Overview</h1>
-            <p class="muted">Revenue, orders, customers, inventory, and sales health.</p>
+            <p class="breadcrumb" id="breadcrumb">Dashboard / Overview</p>
+            <h1 id="pageTitle">Overview</h1>
           </div>
         </div>
-        <label class="search-box"><span class="visually-hidden">Search dashboard</span><input type="search" placeholder="Search dashboard"></label>
+        <label class="search-box">
+          <span class="visually-hidden">Search admin data</span>
+          <input id="globalSearch" type="search" placeholder="Search products, orders, users">
+        </label>
         <div class="topbar-right">
-          <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle theme">☾</button>
+          <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle theme">D</button>
           <div class="account-menu" id="accountMenu">
-            <button class="icon-button" id="accountToggle" type="button" aria-label="Open account menu">♙</button>
+            <button class="avatar-button" id="accountToggle" type="button" aria-label="Open account menu">
+              <span id="avatarInitials">AD</span>
+            </button>
             <div class="dropdown" id="accountDropdown">
               <a href="#profile">Profile</a>
               <a href="#settings">Settings</a>
@@ -42,35 +48,17 @@
         </div>
       </header>
 
-      <section class="grid stats-grid" id="statsGrid" aria-label="Dashboard stats"></section>
-
-      <section class="quick-actions" aria-label="Quick actions">
-        <a class="primary-button" href="#products">Add Product</a>
-        <a class="secondary-button" href="#orders">View Orders</a>
-        <a class="secondary-button" href="#users">Users</a>
-        <a class="secondary-button" href="#settings">Settings</a>
-      </section>
-
-      <section class="grid">
-        <article class="panel">
-          <h2>Recent Activity</h2>
-          <div id="recentActivity"></div>
-        </article>
-        <article class="panel">
-          <h2>Low Stock</h2>
-          <div id="lowStock"></div>
-        </article>
-      </section>
-
-      <section class="panel">
-        <h2>Recent Orders</h2>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
-            <tbody id="recentOrders"></tbody>
-          </table>
+      <section class="page-intro">
+        <div>
+          <h2 class="welcome-greeting" id="welcomeGreeting">Welcome</h2>
+          <p class="eyebrow" id="pageSection">Dashboard</p>
+          <p class="muted" id="pageSubtitle">Business performance, operations, and alerts at a glance.</p>
         </div>
+        <div class="intro-actions" id="pageActions"></div>
       </section>
+
+      <div id="toastRegion" class="toast-region" aria-live="polite"></div>
+      <section id="appView" class="view" aria-live="polite"></section>
     </main>
   </div>
   <script src="/admin/admin.js"></script>

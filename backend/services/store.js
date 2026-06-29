@@ -51,7 +51,8 @@ function publicUser(user) {
     username: user.username,
     bio: user.bio,
     phoneVerifiedAt: user.phoneVerifiedAt,
-    emailVerifiedAt: user.emailVerifiedAt
+    emailVerifiedAt: user.emailVerifiedAt,
+    createdAt: user.createdAt
   };
 }
 
