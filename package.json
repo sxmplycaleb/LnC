@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@uploadthing/react": "^6.6.0",
+    "@vercel/speed-insights": "^2.0.0",
     "better-sqlite3": "^12.11.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
