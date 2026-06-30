@@ -105,7 +105,7 @@ async function main() {
     await waitForServer();
 
     const catalog = await request("/api/products");
-    assert(catalog.products.length >= 1, "Expected seeded products");
+    assert.equal(catalog.products.length, 0, "Expected an empty product catalog before merchant-added products");
     assert(catalog.pagination, "Expected product pagination metadata");
 
     const filteredCatalog = await request("/api/products?search=smoke&limit=1");

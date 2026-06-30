@@ -1,17 +1,18 @@
-# Flagship E-Commerce Platform
+# LnC Streetwear
 
-A self-contained, fully stacked ecommerce website which utilizes the following technologies: Node.js, vanilla frontend, JWT-based authentication, product searching or filtering functionality, shopping cart and checkout, product administration and order tracking for admins.
+A self-contained street fashion ecommerce website built with Node.js, a vanilla frontend, JWT-based authentication, product search and filters, shopping cart and checkout, product administration, and order tracking.
 
 ## Features
 
 - User registration and login using JWT sessions
-- Listing of products with options to filter by searching, category, price, rating, and stock availability
-- Customer ratings and reviews
+- Empty product catalog ready for merchant-added streetwear drops
+- Product filters for search, category, price, rating, and stock availability
+- Customer ratings and reviews for future product entries
 - Shopping cart with options to add quantities and check out
 - Customer order tracking
 - Administration page to add, edit, and delete products
 - Orders listing for administration with status information
-- Uploading images locally, optionally uploading images using Cloudinary
+- Uploading product images locally, optionally uploading images using Cloudinary
 - Creating a Stripe Checkout session optionally
 - Database backed by file system for simple deployment
 
@@ -27,15 +28,10 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 ```text
 backend/   Node/Express server, routes, API helpers, and backend scripts
-frontend/  Static HTML, CSS, browser JavaScript, and demo data
+frontend/  Static HTML, CSS, and browser JavaScript
 ```
 
-Seeded accounts:
-
-```text
-Admin: admin@demo.com / Admin123!
-User:  customer@demo.com / Customer123!
-```
+The storefront starts without demo products, orders, categories, reviews, or placeholder inventory.
 
 ## Optional Environment Variables
 
@@ -53,4 +49,4 @@ CLOUDINARY_API_KEY=your-key
 CLOUDINARY_API_SECRET=your-secret
 ```
 
-When `STRIPE_SECRET_KEY` is missing, checkout creates a demo paid order locally. When Cloudinary variables are missing, uploaded images are stored under `data/uploads` and served by the local server.
+When payment provider credentials are missing, checkout remains guarded by the existing local payment flow. When Cloudinary variables are missing, uploaded images are stored under `data/uploads` and served by the local server.

@@ -12,20 +12,43 @@
     tableFilter: "",
     selected: new Set()
   };
+  const icons = {
+    overview: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 12 5l8 7.5V20H5v-7.5Z"/><path d="M9.5 20v-5h5v5"/></svg>',
+    profile: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>',
+    products: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5h12l-.8 11H6.8l-.8-11ZM9 8.5a3 3 0 0 1 6 0"/></svg>',
+    orders: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v16l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2V4Z"/><path d="M9.5 9h5M9.5 13h5"/></svg>',
+    users: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 20a6 6 0 0 0-12 0M10.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM20 19a4.5 4.5 0 0 0-3.2-4.3M16 4.3a3.5 3.5 0 0 1 0 6.4"/></svg>',
+    categories: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v7H4V5ZM13 5h7v7h-7V5ZM4 14h7v5H4v-5ZM13 14h7v5h-7v-5Z"/></svg>',
+    brands: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7.5 12 4l7 3.5v9L12 20l-7-3.5v-9Z"/><path d="m5 7.5 7 3.5 7-3.5M12 11v9"/></svg>',
+    inventory: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14v11H5V8Z"/><path d="M8 8V5h8v3M8 12h8"/></svg>',
+    reviews: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H9l-4 4V5Z"/><path d="m9 10 2 2 4-4"/></svg>',
+    coupons: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5V6h16v2.5a3.5 3.5 0 0 0 0 7V18H4v-2.5a3.5 3.5 0 0 0 0-7Z"/><path d="m9 15 6-6M9.5 9.5h.1M14.5 14.5h.1"/></svg>',
+    analytics: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V5M5 19h15"/><path d="M9 16v-5M13 16V8M17 16v-7"/></svg>',
+    settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a7.2 7.2 0 0 0-1.7-1L14.5 3h-5l-.3 3.1a7.2 7.2 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a7.2 7.2 0 0 0 1.7 1l.3 3.1h5l.3-3.1a7.2 7.2 0 0 0 1.7-1l2.4 1 2-3.4-2-1.5c.1-.3.1-.7.1-1Z"/></svg>',
+    refresh: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M19 11a7 7 0 1 0-2 5"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    export: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10M8 10l4 4 4-4"/><path d="M5 17v3h14v-3"/></svg>',
+    print: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4M7 17H5v-6h14v6h-2"/><path d="M7 14h10v6H7v-6Z"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.2c0 4.3-2.8 7.5-7 9.3-4.2-1.8-7-5-7-9.3V6l7-2.5Z"/><path d="m9 12 2 2 4-4"/></svg>',
+    sun: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4V2m0 20v-2m8-8h2M2 12h2m14.4-6.4 1.4-1.4M4.2 19.8l1.4-1.4m0-12.8L4.2 4.2m15.6 15.6-1.4-1.4M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg>',
+    moon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.3A8.4 8.4 0 0 1 8.7 4a8.6 8.6 0 1 0 11.3 11.3Z"/></svg>',
+    filter: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>',
+    chevronRight: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>'
+  };
 
   const navItems = [
-    { id: "overview", label: "Overview", icon: "OV", roles: ["admin"] },
-    { id: "profile", label: "Profile", icon: "PR", roles: ["admin"] },
-    { id: "products", label: "Products", icon: "PD", roles: ["admin"] },
-    { id: "orders", label: "Orders", icon: "OR", roles: ["admin"] },
-    { id: "users", label: "Users", icon: "US", roles: ["admin"] },
-    { id: "categories", label: "Categories", icon: "CT", roles: ["admin"] },
-    { id: "brands", label: "Brands", icon: "BR", roles: ["admin"] },
-    { id: "inventory", label: "Inventory", icon: "IN", roles: ["admin"] },
-    { id: "reviews", label: "Reviews", icon: "RV", roles: ["admin"] },
-    { id: "coupons", label: "Coupons", icon: "CP", roles: ["admin"] },
-    { id: "analytics", label: "Analytics", icon: "AN", roles: ["admin"] },
-    { id: "settings", label: "Settings", icon: "ST", roles: ["admin"] }
+    { id: "overview", label: "Overview", icon: "overview", roles: ["admin"] },
+    { id: "profile", label: "Profile", icon: "profile", roles: ["admin"] },
+    { id: "products", label: "Products", icon: "products", roles: ["admin"] },
+    { id: "orders", label: "Orders", icon: "orders", roles: ["admin"] },
+    { id: "users", label: "Users", icon: "users", roles: ["admin"] },
+    { id: "categories", label: "Categories", icon: "categories", roles: ["admin"] },
+    { id: "brands", label: "Brands", icon: "brands", roles: ["admin"] },
+    { id: "inventory", label: "Inventory", icon: "inventory", roles: ["admin"] },
+    { id: "reviews", label: "Reviews", icon: "reviews", roles: ["admin"] },
+    { id: "coupons", label: "Coupons", icon: "coupons", roles: ["admin"] },
+    { id: "analytics", label: "Analytics", icon: "analytics", roles: ["admin"] },
+    { id: "settings", label: "Settings", icon: "settings", roles: ["admin"] }
   ];
 
   const pageMeta = {
@@ -76,7 +99,7 @@
 
   function updateThemeButton(theme) {
     const themeToggle = document.getElementById("themeToggle");
-    if (themeToggle) themeToggle.textContent = theme === "dark" ? "D" : "L";
+    if (themeToggle) themeToggle.innerHTML = theme === "dark" ? icons.moon : icons.sun;
   }
 
   function toggleTheme() {
@@ -132,7 +155,7 @@
     if (!nav) return;
     nav.innerHTML = navItems.filter(canAccess).map((item) => `
       <a class="${state.route === item.id ? "active" : ""}" href="#${item.id}" title="${escapeHtml(item.label)}">
-        <span class="nav-icon" aria-hidden="true">${item.icon}</span>
+        <span class="nav-icon" aria-hidden="true">${icons[item.icon] || ""}</span>
         <span class="nav-label">${escapeHtml(item.label)}</span>
       </a>
     `).join("");
@@ -150,14 +173,14 @@
 
   function actionMarkup(route) {
     const actions = {
-      overview: `<button class="secondary-button" data-action="refresh">Refresh</button><a class="primary-button" href="#analytics">Open Analytics</a>`,
-      products: `<button class="secondary-button" data-action="export-products">Export CSV</button><button class="primary-button" data-action="add-product">Add Product</button>`,
-      orders: `<button class="secondary-button" data-action="print-invoice">Print Invoice</button><button class="primary-button" data-action="refresh">Refresh</button>`,
-      users: `<button class="secondary-button" data-action="rbac">RBAC Matrix</button><button class="primary-button" data-action="invite-user">Invite User</button>`,
-      analytics: `<button class="secondary-button" data-action="export-pdf">Export PDF</button><button class="primary-button" data-action="export-csv">Export CSV</button>`,
-      settings: `<button class="primary-button" data-action="save-settings">Save Settings</button>`
+      overview: `<button class="secondary-button" data-action="refresh">${icons.refresh}Refresh</button><a class="primary-button" href="#analytics">${icons.analytics}Open Analytics</a>`,
+      products: `<button class="secondary-button" data-action="export-products">${icons.export}Export CSV</button><button class="primary-button" data-action="add-product">${icons.plus}Add Product</button>`,
+      orders: `<button class="secondary-button" data-action="print-invoice">${icons.print}Print Invoice</button><button class="primary-button" data-action="refresh">${icons.refresh}Refresh</button>`,
+      users: `<button class="secondary-button" data-action="rbac">${icons.shield}RBAC Matrix</button><button class="primary-button" data-action="invite-user">${icons.plus}Invite User</button>`,
+      analytics: `<button class="secondary-button" data-action="export-pdf">${icons.export}Export PDF</button><button class="primary-button" data-action="export-csv">${icons.export}Export CSV</button>`,
+      settings: `<button class="primary-button" data-action="save-settings">${icons.settings}Save Settings</button>`
     };
-    return actions[route] || `<button class="primary-button" data-action="create">Create</button>`;
+    return actions[route] || `<button class="primary-button" data-action="create">${icons.plus}Create</button>`;
   }
 
   function updateGreeting() {
@@ -218,7 +241,7 @@
           <tbody>${rows.join("")}</tbody>
         </table>
       </div>
-      <div class="table-footer"><span>Showing ${rows.length} records</span><div><button class="pager" disabled>Prev</button><button class="pager">Next</button></div></div>
+      <div class="table-footer"><span>Showing ${rows.length} records</span><div><button class="pager" disabled>Prev</button><button class="pager">Next${icons.chevronRight}</button></div></div>
     `;
   }
 
@@ -369,7 +392,7 @@
   }
 
   function filtersMarkup(labels) {
-    return `<section class="toolbar"><label class="search-inline"><span>Search</span><input id="tableSearch" type="search" value="${escapeHtml(state.tableFilter)}" placeholder="Search this page"></label>${labels.map((label) => `<button class="filter-button" data-action="filter">${escapeHtml(label)}</button>`).join("")}</section>`;
+    return `<section class="toolbar"><label class="search-inline"><span>Search</span><input id="tableSearch" type="search" value="${escapeHtml(state.tableFilter)}" placeholder="Search this page"></label>${labels.map((label) => `<button class="filter-button" data-action="filter">${icons.filter}${escapeHtml(label)}</button>`).join("")}</section>`;
   }
 
   function renderCategories() {
@@ -426,7 +449,7 @@
   }
 
   function entityGrid(title, items, buttonLabel) {
-    return `<section class="panel"><div class="panel-title"><h2>${escapeHtml(title)}</h2><button class="primary-button" data-action="create-entity">${escapeHtml(buttonLabel)}</button></div><div class="entity-grid">${items.map((item) => `<article class="entity-card"><div class="entity-image"></div><strong>${escapeHtml(item.name)}</strong><p>${escapeHtml(item.meta)}</p><button class="table-action" data-action="entity-action">${escapeHtml(item.action)}</button></article>`).join("")}</div></section>`;
+    return `<section class="panel"><div class="panel-title"><h2>${escapeHtml(title)}</h2><button class="primary-button" data-action="create-entity">${icons.plus}${escapeHtml(buttonLabel)}</button></div><div class="entity-grid">${items.map((item) => `<article class="entity-card"><div class="entity-image"></div><strong>${escapeHtml(item.name)}</strong><p>${escapeHtml(item.meta)}</p><button class="table-action" data-action="entity-action">${icons.chevronRight}${escapeHtml(item.action)}</button></article>`).join("")}</div></section>`;
   }
 
   function renderView() {

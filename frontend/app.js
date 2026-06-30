@@ -34,6 +34,18 @@ const money = (value) => {
   return `$${amount.toFixed(2)}`;
 };
 let revealObserver = null;
+const iosIcon = (name) => ({
+  bag: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5h12l-.8 11H6.8l-.8-11ZM9 8.5a3 3 0 0 1 6 0"/></svg>',
+  eye: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12s3.1-5.5 8.5-5.5S20.5 12 20.5 12 17.4 17.5 12 17.5 3.5 12 3.5 12Z"/><path d="M12 14.8a2.8 2.8 0 1 0 0-5.6 2.8 2.8 0 0 0 0 5.6Z"/></svg>',
+  refresh: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M19 11a7 7 0 1 0-2 5"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  minus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 11v6M14 11v6M8 7l1-2h6l1 2M7 7l1 13h8l1-13"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L19 8.5 15.5 5 4 16.5Z"/><path d="m14.5 6 3.5 3.5"/></svg>',
+  check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>',
+  user: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>'
+}[name] || "");
 
 async function api(path, options = {}) {
     if (window.CommerceApi && typeof fetch === "function") {
@@ -81,7 +93,7 @@ function applyTheme(theme) {
     const label = button.querySelector(".theme-label");
     
     if (label) {
-      label.textContent = state.theme === "light" ? "Dark" : "Light";
+      label.textContent = state.theme === "light" ? "Dark mode" : "Light mode";
     } else {
       button.textContent = state.theme === "light" ? "Dark" : "Light";
     }
@@ -151,7 +163,6 @@ function updateAuthUI() {
   if (signedOutMenu) signedOutMenu.classList.toggle("hidden", Boolean(state.user));
   if (signedInMenu) signedInMenu.classList.toggle("hidden", !state.user);
   if (avatar && state.user) {
-    avatar.textContent = getUserInitials(state.user);
     avatar.title = state.user.name || state.user.email;
   }
 
@@ -210,9 +221,11 @@ function renderProducts() {
 
   if (!visibleProducts.length) {
     grid.innerHTML = emptyStateMarkup({
-      title: "No products match those filters.",
-      message: "Try widening your price, rating, or stock filters to see more of the collection.",
-      action: `<button class="secondary-button" type="button" onclick="clearCatalogFilters()">Reset filters</button>`
+      title: state.categories.length ? "No drops match those filters." : "The first Omanutro drop is waiting.",
+      message: state.categories.length
+        ? "Try widening your filters to see more streetwear pieces."
+        : "Your storefront is clean and ready. Add products from the admin dashboard when your collection is ready.",
+      action: state.categories.length ? `<button class="secondary-button" type="button" onclick="clearCatalogFilters()">${iosIcon("refresh")}Reset filters</button>` : ""
     });
     return;
   }
@@ -265,8 +278,8 @@ function productCardMarkup(product) {
           <span>${escapeHtml(stockLabel)}</span>
         </div>
         <div class="product-actions">
-          <button class="primary-button" type="button" onclick="event.stopPropagation(); addToCart('${product.id}')" ${isOutOfStock ? "disabled aria-disabled=\"true\"" : ""}>${isOutOfStock ? "Sold out" : "Add to cart"}</button>
-          <button class="secondary-button" type="button" onclick="event.stopPropagation(); openProductDetail('${product.id}')" aria-label="View ${escapeAttr(product.name)} details">Details</button>
+          <button class="primary-button" type="button" onclick="event.stopPropagation(); addToCart('${product.id}')" ${isOutOfStock ? "disabled aria-disabled=\"true\"" : ""}>${iosIcon(isOutOfStock ? "check" : "bag")}${isOutOfStock ? "Sold out" : "Add to cart"}</button>
+          <button class="secondary-button" type="button" onclick="event.stopPropagation(); openProductDetail('${product.id}')" aria-label="View ${escapeAttr(product.name)} details">${iosIcon("eye")}Details</button>
         </div>
       </div>
     </article>
@@ -288,7 +301,7 @@ function clearCatalogFilters() {
 function emptyStateMarkup({ title, message, action = "" }) {
   return `
     <div class="empty-state wide-panel" role="status">
-      <span class="empty-state-icon" aria-hidden="true">L&C</span>
+      <span class="empty-state-icon" aria-hidden="true">Omanutro</span>
       <strong>${escapeHtml(title)}</strong>
       <p>${escapeHtml(message)}</p>
       ${action}
@@ -298,7 +311,19 @@ function emptyStateMarkup({ title, message, action = "" }) {
 
 function renderHeroPreview() {
   const strip = $("#heroProductStrip");
-  if (!state.products.length) return;
+  if (!state.products.length) {
+    state.heroProducts = [];
+    const featureImage = $("#heroFeatureImage");
+    if (featureImage) {
+      featureImage.src = "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW";
+      featureImage.alt = "Omanutro logo";
+    }
+    if (strip) {
+      strip.innerHTML = `<div class="hero-empty-drop">Add your first drop in the dashboard.</div>`;
+    }
+    window.clearInterval(state.heroTimer);
+    return;
+  }
 
   const featuredProducts = state.products
     .filter((product) => product.stock > 0)
@@ -327,7 +352,7 @@ function renderHeroProduct() {
   const product = state.heroProducts[state.heroIndex] || state.heroProducts[0];
   featureImage.classList.remove("is-swapping");
   featureImage.src = productImageSrc(product);
-  featureImage.alt = `${product.name} from L&C Enterprise`;
+  featureImage.alt = `${product.name} from Omanutro`;
   window.requestAnimationFrame?.(() => featureImage.classList.add("is-swapping"));
 }
 
@@ -416,7 +441,11 @@ function applyCurrency(currency) {
   localStorage.setItem("commerce-currency", state.currency);
   const button = $("#currencyToggleButton");
   const label = $("#currencyLabel");
+  const select = $("#currencySelect");
+  const flag = $("#currencyFlag");
   if (label) label.textContent = state.currency;
+  if (select) select.value = state.currency;
+  if (flag) flag.textContent = state.currency === "KES" ? "🇰🇪" : "🇺🇸";
   if (button) {
     const nextCurrency = state.currency === "USD" ? "KES" : "USD";
     button.setAttribute("aria-label", `Switch currency to ${nextCurrency}`);
@@ -431,6 +460,11 @@ function toggleCurrency() {
   renderProducts();
   renderCart();
   if (!$("#productDetailModal")?.classList.contains("hidden")) closeProductDetail();
+}
+
+function setMobileMenu(open) {
+  document.body.classList.toggle("mobile-nav-open", open);
+  $("#mobileMenuButton")?.setAttribute("aria-expanded", String(open));
 }
 
 function updatePriceSelectLabels() {
@@ -475,7 +509,7 @@ function openProductDetail(productId) {
           <div><span>Reviews</span><strong>${(product.reviews || []).length}</strong></div>
         </div>
         <div class="detail-tags">${tags}</div>
-        <button class="primary-button" onclick="addToCart('${product.id}'); closeProductDetail();" ${product.stock < 1 ? "disabled" : ""}>Add to cart</button>
+        <button class="primary-button" onclick="addToCart('${product.id}'); closeProductDetail();" ${product.stock < 1 ? "disabled" : ""}>${iosIcon("bag")}Add to cart</button>
       </div>
     </div>
     <div class="detail-review-section">
@@ -589,7 +623,7 @@ function renderCart() {
     const emptyCart = emptyStateMarkup({
       title: "Your cart is empty.",
       message: "Add a product from the collection and checkout will be ready when you are.",
-      action: `<button class="secondary-button" type="button" onclick="switchView('shop')">Continue shopping</button>`
+      action: `<button class="secondary-button" type="button" onclick="switchView('shop')">${iosIcon("arrow")}Continue shopping</button>`
     });
     if (items) items.innerHTML = emptyCart;
     if (pageItems) pageItems.innerHTML = emptyCart;
@@ -604,7 +638,7 @@ function renderCart() {
             <strong>Unavailable product</strong>
             <div>This item will be removed at checkout.</div>
           </div>
-          <button class="danger-button" type="button" onclick="removeFromCart('${item.productId}')">Remove</button>
+          <button class="danger-button" type="button" onclick="removeFromCart('${item.productId}')">${iosIcon("trash")}Remove</button>
         </div>
       `;
     }
@@ -615,11 +649,11 @@ function renderCart() {
           <div>${money(product.price)} each</div>
         </div>
         <div class="quantity-controls">
-          <button type="button" onclick="changeQuantity('${item.productId}', -1)">-</button>
+          <button class="icon-button quantity-button" type="button" onclick="changeQuantity('${item.productId}', -1)" aria-label="Decrease quantity">${iosIcon("minus")}</button>
           <span>${item.quantity}</span>
-          <button type="button" onclick="changeQuantity('${item.productId}', 1)">+</button>
+          <button class="icon-button quantity-button" type="button" onclick="changeQuantity('${item.productId}', 1)" aria-label="Increase quantity">${iosIcon("plus")}</button>
         </div>
-        <button class="danger-button" type="button" onclick="removeFromCart('${item.productId}')">Remove</button>
+        <button class="danger-button" type="button" onclick="removeFromCart('${item.productId}')">${iosIcon("trash")}Remove</button>
       </div>
     `;
   }).join("");
@@ -688,7 +722,7 @@ async function loadOrders() {
     list.innerHTML = emptyStateMarkup({
       title: "Sign in to track your orders.",
       message: "Your order history, payment state, and delivery updates appear here after checkout.",
-      action: `<button class="primary-button" type="button" onclick="openAuth('login')">Sign in</button>`
+      action: `<button class="primary-button" type="button" onclick="openAuth('login')">${iosIcon("user")}Sign in</button>`
     });
     return;
   }
@@ -756,8 +790,8 @@ function renderAdminProducts() {
         <div>${escapeHtml(product.category)} | ${money(product.price)} | ${product.stock} stock</div>
       </div>
       <div class="row-actions">
-        <button class="small-button" onclick="editProduct('${product.id}')">Edit</button>
-        <button class="danger-button" onclick="deleteProduct('${product.id}')">Delete</button>
+        <button class="small-button" onclick="editProduct('${product.id}')">${iosIcon("edit")}Edit</button>
+        <button class="danger-button" onclick="deleteProduct('${product.id}')">${iosIcon("trash")}Delete</button>
       </div>
     </div>
   `).join("");
@@ -865,7 +899,7 @@ function openAuth(mode = "login") {
   const isRegister = mode === "register";
   $("#authTitle").textContent = isRegister ? "Create account" : "Sign in";
   $("#authSubmit").textContent = isRegister ? "Send WhatsApp code" : "Sign in";
-  $("#toggleAuthMode").textContent = isRegister ? "Already have an account? Sign in" : "Need an account? Create one";
+  $("#toggleAuthMode").textContent = isRegister ? "Already have an account? Sign in" : "Sign Up";
   $$(".register-only").forEach((node) => node.classList.toggle("hidden", !isRegister));
   $$(".signup-code-field").forEach((node) => node.classList.add("hidden"));
   $("#authPhone")?.toggleAttribute("required", isRegister);
@@ -1212,15 +1246,31 @@ function bindEvents() {
   $("#heroPrevButton")?.addEventListener("click", () => moveHeroProduct(-1));
   $("#heroNextButton")?.addEventListener("click", () => moveHeroProduct(1));
   $("#currencyToggleButton")?.addEventListener("click", toggleCurrency);
+  $("#currencySelect")?.addEventListener("change", (event) => {
+    applyCurrency(event.target.value);
+    renderProducts();
+    renderCart();
+    if (!$("#productDetailModal")?.classList.contains("hidden")) closeProductDetail();
+  });
+  $("#mobileMenuButton")?.addEventListener("click", () => {
+    setMobileMenu(!document.body.classList.contains("mobile-nav-open"));
+  });
+  $("#cartButton")?.addEventListener("click", () => $("#cartDrawer")?.classList.add("open"));
   updateTopbarState();
   window.addEventListener("scroll", updateTopbarState, { passive: true });
 
   $$(".nav-tab").forEach((tab) => tab.addEventListener("click", () => {
+    if (!tab.dataset.view) {
+      $$(".nav-tab").forEach((entry) => entry.classList.toggle("active", entry === tab));
+      setMobileMenu(false);
+      return;
+    }
     if (!state.user) {
       requireSignin("Sign in to view this section.");
       return;
     }
     switchView(tab.dataset.view);
+    setMobileMenu(false);
   }));
 
   const topSearchInput = $("#topSearchInput");
@@ -1283,7 +1333,6 @@ function bindEvents() {
   $("#refreshOrdersButton")?.addEventListener("click", () => loadOrders().catch((error) => toast(error.message)));
   $("#closeAuthButton")?.addEventListener("click", () => $("#authModal").classList.add("hidden"));
   $("#forgotPasswordButton")?.addEventListener("click", openResetPassword);
-  $("#backToLoginButton")?.addEventListener("click", () => { closeResetPassword(); openAuth("login");});
   $("#closeResetButton")?.addEventListener("click", closeResetPassword);
   $("#resetForm")?.addEventListener("submit", (event) => submitResetPassword(event).catch((error) => toast(error.message)));
   $("#closeProductDetailButton")?.addEventListener("click", closeProductDetail);

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalog | L&C Enterprise</title>
+    <title>Catalog | Omanutro</title>
+    <meta name="description" content="Shop Omanutro drops and manage your street fashion cart.">
+    <link rel="icon" href="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW">
 
     <script>
         const savedTheme = localStorage.getItem("commerce-theme");
@@ -16,15 +18,20 @@
 
 <body>
     <header class="topbar">
-        <a class="brand" href="/" aria-label="L&C Enterprise home.">
-            <span class="brand-mark">L&C</span>
-            <span>L&C Enterprise</span>
+        <a class="brand" href="/" aria-label="Omanutro home.">
+            <span class="brand-mark"><img src="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW" alt=""></span>
+            <span>Omanutro</span>
         </a>
+        <button class="mobile-menu-toggle icon-button" id="mobileMenuButton" type="button" aria-label="Open navigation" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
 
         <nav class="nav-tabs" aria-label="Primary navigation">
             <div class="topbar-search search-control">
-                <input id="topSearchInput" type="search" list="searchSuggestions" placeholder="Search Products, Brands and Categories..." aria-label="Search products, brands and categories">
-                <button class="small-button search-button" id="topSearchButton" type="button">Search</button>
+                <input id="topSearchInput" type="search" list="searchSuggestions" placeholder="Search drops, fits, and categories..." aria-label="Search drops, fits, and categories">
+                <button class="small-button search-button icon-only" id="topSearchButton" type="button" aria-label="Search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"/></svg>
+                </button>
             </div>
             <button class="nav-tab auth-only hidden active" data-view="shop">Shop</button>
             <button class="nav-tab auth-only hidden" data-view="orders">Orders</button>
@@ -34,16 +41,33 @@
 
         <div class="topbar-actions">
             <button class="theme-toggle" id="themeToggleButton" type="button" aria-label="Switch Theme">
-                <span class="theme-label"></span>
+                <span class="toggle-icon sun-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4V2m0 20v-2m8-8h2M2 12h2m14.4-6.4 1.4-1.4M4.2 19.8l1.4-1.4m0-12.8L4.2 4.2m15.6 15.6-1.4-1.4M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg></span>
+                <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                <span class="toggle-icon moon-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 15.3A8.4 8.4 0 0 1 8.7 4a8.6 8.6 0 1 0 11.3 11.3Z"/></svg></span>
+                <span class="theme-label visually-hidden"></span>
+            </button>
+
+            <label class="currency-selector" aria-label="Select currency">
+                <span id="currencyFlag">🇺🇸</span>
+                <select id="currencySelect">
+                    <option value="USD">🇺🇸 USD</option>
+                    <option value="KES">🇰🇪 KES</option>
+                </select>
+            </label>
+
+            <button class="icon-button wishlist-button" type="button" data-account-action="wishlist" aria-label="Open wishlist" title="Wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/></svg>
             </button>
 
             <button class="icon-button" id="cartButton" aria-label="View Cart." title="Cart">
-                <span class="icon">Cart</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 13H7L6 8Zm3 0a3 3 0 0 1 6 0"/></svg>
                 <span class="cart-count" id="cartCount">0</span> 
             </button>
 
             <div class="account-menu" id="signedOutMenu">
-                <button class="secondary-button account-trigger" id="accountMenuButton" type="button" aria-expanded="false">Account</button>
+                <button class="icon-button account-trigger" id="accountMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>
+                </button>
                 <div class="dropdown-menu hidden" id="accountMenu">
                     <button class="primary-button" type="button" data-account-action="signin">Sign in</button>
                     <button type="button" data-account-action="my-account">My account</button>
@@ -53,7 +77,9 @@
             </div>
 
             <div class="account-menu hidden" id="signedInMenu">
-                <button class="icon-button account-avatar" id="profileMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">A</button>
+                <button class="icon-button account-avatar" id="profileMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>
+                </button>
                 <div class="dropdown-menu hidden" id="profileMenu">
                     <button type="button" data-profile-action="profile">Profile</button>
                     <button type="button" data-profile-action="recently-viewed">Recently viewed</button>
@@ -77,8 +103,10 @@
             <label>
                 Search
                 <span class="search-control">
-                    <input id="searchInput" type="search" list="searchSuggestions" placeholder="Search products...">
-                    <button class="small-button search-button" id="searchButton" type="button">Search</button>
+                    <input id="searchInput" type="search" list="searchSuggestions" placeholder="Search hoodies, tees, caps...">
+                    <button class="small-button search-button icon-only" id="searchButton" type="button" aria-label="Search catalog">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"/></svg>
+                    </button>
                 </span>
             </label>
 
@@ -204,7 +232,9 @@
         <aside class="drawer" id="cartDrawer" aria-hidden="true">
             <div class="drawer-header">
                 <strong>Shopping Cart</strong>
-                <button class="icon-button" id="closeCartButton" aria-label="Close Cart." title="Close Cart">X</button>
+                <button class="icon-button" id="closeCartButton" aria-label="Close Cart." title="Close Cart">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                </button>
             </div>
 
             <div id="cartItems" class="cart-items"></div>
@@ -254,7 +284,9 @@
             <form class="auth-card" id="authForm">
                 <div class="section-heading">
                     <span id="authTitle">Login</span>
-                    <button class="icon-button" type="button" id="closeAuthButton" aria-label="Close auth modal" title="Close Auth Modal">X</button>
+                    <button class="icon-button" type="button" id="closeAuthButton" aria-label="Close auth modal" title="Close Auth Modal">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                    </button>
                 </div>
 
                 <label class="register-only hidden">
@@ -277,7 +309,9 @@
             <form class="auth-card" id="resetForm">
                 <div class="section-heading">
                     <span id="resetTitle">Reset password</span>
-                    <button class="icon-button" type="button" id="closeResetButton" aria-label="Close reset modal" title="Close">X</button>
+                    <button class="icon-button" type="button" id="closeResetButton" aria-label="Close reset modal" title="Close">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                    </button>
                 </div>
                 <p class="muted-copy" id="resetHelp">Enter your account email or phone and we will send a reset code to WhatsApp.</p>
                 <label>Email or phone<input id="resetIdentifier" autocomplete="username" required></label>
@@ -289,7 +323,9 @@
 
         <div class="modal hidden detail-modal" id="productDetailModal" role="dialog" aria-hidden="true">
             <div class="product-detail-card">
-                <button class="icon-button detail-close" type="button" id="closeProductDetailButton" aria-label="Close product details modal" title="Close">X</button>
+                <button class="icon-button detail-close" type="button" id="closeProductDetailButton" aria-label="Close product details modal" title="Close">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                </button>
                 <div id="productDetailContent"></div>        
             </div>
         </div>
@@ -300,8 +336,9 @@
         <div class="footer-panel">
             <div class="footer-brand">
                 <span class="footer-kicker">Stay Connected</span>
-                <strong>&copy; <span id="copyrightYear"></span> L&C Enterprises. All rights reserved.</strong>
-                <span>Serving customers with curated products, quick support, and simple checkout.</span>
+                <span class="brand-mark footer-logo"><img src="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW" alt=""></span>
+                <strong>&copy; <span id="copyrightYear"></span> Omanutro. All rights reserved.</strong>
+                <span>Street fashion wear with quick support and simple checkout.</span>
             </div>
             <address class="footer-contact">
                 <span class="footer-kicker">Contact Us</span>

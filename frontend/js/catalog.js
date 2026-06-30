@@ -6,7 +6,7 @@
 
   function fallbackImage(product, escapeHtml) {
     const label = escapeHtml(product.name || "Product");
-    const category = escapeHtml(product.category || "L&C Enterprise");
+    const category = escapeHtml(product.category || "Omanutro");
     const svg = `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450">
         <defs>
@@ -21,7 +21,7 @@
         <rect x="70" y="92" width="460" height="266" rx="28" fill="#ffffff" opacity="0.86"/>
         <text x="300" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#18202f">${label}</text>
         <text x="300" y="254" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#3f4c5e">${category}</text>
-        <text x="300" y="314" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" letter-spacing="3" fill="#315c96">L&C ENTERPRISE</text>
+        <text x="300" y="314" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" letter-spacing="3" fill="#315c96">LNC STREETWEAR</text>
       </svg>
     `;
 

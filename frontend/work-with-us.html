@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WORK WITH US | OMANUTRO</title>
+        <meta name="description" content="Apply for fashion, creative, marketing, and support opportunities at OMANUTRO.">
+        <link rel="icon" href="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW">
+        <script>
+            const savedTheme = localStorage.getItem("commerce-theme");
+            const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            document.documentElement.dataset.theme = savedTheme || preferredTheme;
+        </script>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="topbar work-topbar">
+            <a class="brand" href="/" aria-label="Omanutro home.">
+                <span>OMANUTRO</span>
+            </a>
+            <nav class="nav-tabs" aria-label="Primary navigation">
+                <a class="nav-tab" href="/">Home</a>               
+                <a class="nav-tab active" href="/work-with-us.html">WORK WITH US</a>
+                <a class="nav-tab" href="/#footer">Contact</a>
+            </nav>
+        </header>
+
+        <main class="work-page">
+            <section class="work-hero" aria-labelledby="workHeroTitle">
+                <span class="work-kicker">Careers at OMANUTRO</span>
+                <h1 id="workHeroTitle">Build the next language of modern streetwear.</h1>
+                <p>Join a fashion and e-commerce team shaped by sharp design, clear storytelling, reliable operations, and a deep respect for the people who wear the brand.</p>
+                <a class="primary-button work-hero-button" href="#applicationForm">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                    Apply Now
+                </a>
+            </section>
+
+            <section class="work-section" aria-labelledby="opportunitiesTitle">
+                <div class="work-section-heading">
+                    <span>Available Opportunities</span>
+                    <h2 id="opportunitiesTitle">Creative, commercial, and customer-facing roles.</h2>
+                </div>
+                <div class="opportunity-grid">
+                    <article><h3>Fashion Model</h3><p>Represent seasonal drops through campaigns, fittings, lookbooks, and launch content.</p></article>
+                    <article><h3>Clothing Designer</h3><p>Develop silhouettes, fabrics, graphics, trims, and production-ready concepts.</p></article>
+                    <article><h3>Brand Ambassador</h3><p>Grow community trust through events, social content, and authentic brand advocacy.</p></article>
+                    <article><h3>Photographer</h3><p>Create premium product, campaign, lifestyle, and behind-the-scenes imagery.</p></article>
+                    <article><h3>Videographer</h3><p>Capture short-form stories, launch films, reels, and product motion assets.</p></article>
+                    <article><h3>Content Creator</h3><p>Shape social-first concepts that make drops feel current, useful, and desirable.</p></article>
+                    <article><h3>Graphic Designer</h3><p>Design visual systems for apparel graphics, campaigns, packaging, and digital channels.</p></article>
+                    <article><h3>Marketing & Social Media</h3><p>Plan campaigns, content calendars, partnerships, performance tests, and audience growth.</p></article>
+                    <article><h3>Customer Support</h3><p>Help customers with sizing, orders, returns, payments, and post-purchase care.</p></article>
+                    <article><h3>E-commerce Operations</h3><p>Support catalog setup, product uploads, merchandising, fulfillment, and order quality.</p></article>
+                    <article><h3>Stylist</h3><p>Build looks for campaigns, shoots, retail moments, and customer-facing edits.</p></article>
+                    <article><h3>Production Assistant</h3><p>Coordinate sampling, inventory checks, vendor follow-ups, and launch readiness.</p></article>
+                </div>
+            </section>
+
+            <section class="work-section application-layout" aria-labelledby="applicationTitle">
+                <div class="work-section-heading">
+                    <span>Application Form</span>
+                    <h2 id="applicationTitle">Tell us where you want to contribute.</h2>
+                    <p>Share enough detail for the team to understand your craft, experience, and availability.</p>
+                </div>
+
+                <form class="application-form" id="applicationForm" novalidate>
+                    <div class="form-alert hidden" id="applicationMessage" role="status"></div>
+                    <div class="split">
+                        <label>Full Name<input id="applicantName" name="name" autocomplete="name" required></label>
+                        <label>Email<input id="applicantEmail" name="email" type="email" autocomplete="email" required></label>
+                    </div>
+                    <div class="split">
+                        <label>Phone Number<input id="applicantPhone" name="phone" type="tel" autocomplete="tel" required></label>
+                        <label>Position Applying For
+                            <select id="applicantPosition" name="position" required>
+                                <option value="">Select a position</option>
+                                <option>Fashion Model</option>
+                                <option>Clothing Designer</option>
+                                <option>Brand Ambassador</option>
+                                <option>Photographer</option>
+                                <option>Videographer</option>
+                                <option>Content Creator</option>
+                                <option>Graphic Designer</option>
+                                <option>Marketing & Social Media</option>
+                                <option>Customer Support</option>
+                                <option>E-commerce Operations</option>
+                                <option>Stylist</option>
+                                <option>Production Assistant</option>
+                                <option>Other</option>
+                            </select>
+                        </label>
+                    </div>
+                    <label>Portfolio/Website URL (optional)<input id="applicantPortfolio" name="portfolio" type="url" placeholder="https://"></label>
+                    <label>CV/Resume Upload<input id="applicantResume" name="resume" type="file" accept=".pdf,.doc,.docx" required></label>
+                    <label>Cover Letter / About Yourself<textarea id="applicantAbout" name="about" rows="6" minlength="40" required></textarea></label>
+                    <button class="primary-button" type="submit">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>
+                        Submit Application
+                    </button>
+                </form>
+            </section>
+
+            <section class="work-section values-section" aria-labelledby="whyTitle">
+                <div class="work-section-heading">
+                    <span>Why Work With OMANUTRO</span>
+                    <h2 id="whyTitle">A premium brand culture with room to grow.</h2>
+                </div>
+                <div class="values-grid">
+                    <article><strong>Craft First</strong><p>We care about fit, finish, visuals, and the details customers feel immediately.</p></article>
+                    <article><strong>Creative Ownership</strong><p>Team members are trusted to bring ideas, test fast, and improve the brand in visible ways.</p></article>
+                    <article><strong>Modern Commerce</strong><p>Work across fashion, content, customer experience, and digital retail in one connected system.</p></article>
+                    <article><strong>Respectful Pace</strong><p>Clear briefs, honest feedback, and organized launches help creative work stay sharp.</p></article>
+                </div>
+            </section>
+
+            <section class="work-section faq-section" aria-labelledby="faqTitle">
+                <div class="work-section-heading">
+                    <span>FAQ</span>
+                    <h2 id="faqTitle">Applicant questions.</h2>
+                </div>
+                <div class="faq-list">
+                    <details open>
+                        <summary>Do I need professional experience?</summary>
+                        <p>Experience helps, but strong taste, reliability, and a clear portfolio can matter just as much for creative roles.</p>
+                    </details>
+                    <details>
+                        <summary>Can I apply for more than one role?</summary>
+                        <p>Yes. Choose the closest position in the form and mention the other areas you can support in your cover letter.</p>
+                    </details>
+                    <details>
+                        <summary>What should I include in my portfolio?</summary>
+                        <p>Send work that shows your current level clearly: campaigns, designs, shoots, videos, social posts, customer work, or relevant case studies.</p>
+                    </details>
+                    <details>
+                        <summary>Are remote applicants considered?</summary>
+                        <p>Some creative and marketing roles can be remote or hybrid. Production, modeling, and shoot-based roles may require local availability.</p>
+                    </details>
+                    <details>
+                        <summary>When will I hear back?</summary>
+                        <p>Shortlisted applicants are contacted after the team reviews fit, portfolio strength, and current role priorities.</p>
+                    </details>
+                </div>
+            </section>
+        </main>
+
+        <div class="toast" id="toast" role="status"></div>
+        <script>
+            const form = document.getElementById("applicationForm");
+            const message = document.getElementById("applicationMessage");
+            const toast = document.getElementById("toast");
+
+            function showApplicationMessage(text, type) {
+                message.textContent = text;
+                message.className = `form-alert ${type}`;
+                toast.textContent = text;
+                toast.classList.add("show");
+                clearTimeout(toast.timeout);
+                toast.timeout = setTimeout(() => toast.classList.remove("show"), 3200);
+            }
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                const invalidField = [...form.elements].find((field) => field.willValidate && !field.checkValidity());
+                if (invalidField) {
+                    invalidField.reportValidity();
+                    showApplicationMessage("Please complete the required fields before submitting.", "error");
+                    return;
+                }
+                form.reset();
+                showApplicationMessage("Application received. Thank you for your interest in OMANUTRO.", "success");
+            });
+        </script>
+    </body>
+</html>

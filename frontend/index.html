@@ -3,7 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>L&C Enterprise</title>
+        <title>OMANUTRO</title>
+        <meta name="description" content="OMANUTRO: Modern street fashion wear, curated drops, and smooth checkout.">
+        <link rel="icon" href="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW">
         <link rel="preconnect" href="https://www.pexels.com">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,37 +16,53 @@
         </script>
         <link rel="stylesheet" href="/style.css">
     </head>
-     <body>
+    <body>
         <header class="topbar">
-            <a class="brand" href="#shop" aria-label="L&C Enterprise home.">
-                <span class="brand-mark">L&C</span>
-                <span>L&C Enterprise</span>
+            <a class="brand" href="#shop" aria-label="Omanutro home.">
+        
+                <span>OMANUTRO</span>
             </a>
+            <button class="mobile-menu-toggle icon-button" id="mobileMenuButton" type="button" aria-label="Open navigation" aria-expanded="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            </button>
             <nav class="nav-tabs" aria-label="Primary navigation">
-                <div class="topbar-search search-control">
-                    <input id="topSearchInput" type="search" list="searchSuggestions" placeholder="Search Products, Brands and Categories..." aria-label="Search products, brands and categories">
-                    <button class="small-button search-button" id="topSearchButton" type="button">Search</button>
-                </div>
-                <button class="nav-tab auth-only hidden active" data-view="shop">Shop</button>
-                <button class="nav-tab auth-only hidden" data-view="orders">Orders</button>
-                <button class="nav-tab auth-only hidden" data-view="cart">Cart</button>
+                <a class="nav-tab" href="#footer">About</a>
+                <a class="nav-tab active" href="#top">Home</a>
+                <a class="nav-tab" href="#shopView">Collection</a>
+                <button class="nav-tab" data-view="shop">Shop</button>                
                 <datalist id="searchSuggestions"></datalist>
             </nav>
             <div class="topbar-actions">
+                <button class="icon-button wishlist-button" type="button" data-account-action="wishlist" aria-label="Open wishlist" title="Wishlist">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/></svg>
+                </button>
+
+                <div class="topbar-search search-control">
+                    <input id="topSearchInput" type="search" list="searchSuggestions" placeholder="Search" aria-label="Search drops, fits, and categories">
+                    <button class="small-button search-button icon-only" id="topSearchButton" type="button" aria-label="Search">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Z"/><path d="m16.2 16.2 4.4 4.4"/></svg>
+                    </button>
+                </div>
                 <button 
                     class="theme-toggle"
                     id="themeToggleButton"
                     type="button"
                     aria-label="Switch to dark theme">
-                    <span class="theme-label">Dark</span>
-                </button>
+                    <span class="toggle-icon sun-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2v2.1M12 18.7v2.1M20.8 12h-2.1M5.3 12H3.2M18.2 5.8l-1.5 1.5M7.3 16.7l-1.5 1.5M18.2 18.2l-1.5-1.5M7.3 7.3 5.8 5.8"/><circle cx="12" cy="12" r="3.6"/></svg></span>
+                    <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                    <span class="toggle-icon moon-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18.8 15.8A7.4 7.4 0 0 1 8.2 5.2 7.9 7.9 0 1 0 18.8 15.8Z"/></svg></span>
+                    <span class="theme-label visually-hidden">Dark</span>
+                </button>              
 
-                <button class="currency-toggle" id="currencyToggleButton" type="button" aria-label="Switch currency to KES" title="Switch currency">
-                    <span id="currencyLabel">USD</span>
+                <button class="icon-button" id="cartButton" aria-label="View cart" title="Cart">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 13H7L6 8Zm3 0a3 3 0 0 1 6 0"/></svg>
+                    <span class="cart-count" id="cartCount">0</span>
                 </button>
 
                 <div class="account-menu" id="signedOutMenu">
-                    <button class="secondary-button account-trigger" id="accountMenuButton" type="button" aria-expanded="false">Account</button>
+                    <button class="icon-button account-trigger" id="accountMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>
+                    </button>
                     <div class="dropdown-menu hidden" id="accountMenu">
                         <button class="primary-button" type="button" data-account-action="signin">Sign in</button>
                         <button type="button" data-account-action="my-account">My account</button>
@@ -54,7 +72,9 @@
                 </div>
 
                 <div class="account-menu hidden" id="signedInMenu">
-                    <button class="icon-button account-avatar" id="profileMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">A</button>
+                    <button class="icon-button account-avatar" id="profileMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>
+                    </button>
                     <div class="dropdown-menu hidden" id="profileMenu">
                         <button type="button" data-profile-action="profile">Profile</button>
                         <button type="button" data-profile-action="recently-viewed">Recently viewed</button>
@@ -68,48 +88,42 @@
 
         <main>
             <section class="hero-band" aria-labelledby="heroTitle">
-                <div class="hero-copy">
-                    <span class="hero-kicker">Curated daily essentials</span>
-                    <h1 id="heroTitle"><span>L&C Enterprise</span></h1>
-                    <p>Shop product-led finds with fast checkout, WhatsApp support, and polished picks selected for everyday style.</p>
-                    <div class="hero-actions">
-                        <a href="#shopView" class="primary-button" id="shopNowButton">View Collection</a>
-                        <a class="secondary-button hero-whatsapp-link" href="https://wa.me/254747690999?text=Hello%20L%26C%20Enterprise%2C%20I%20would%20like%20to%20shop." target="_blank" rel="noopener noreferrer">
-                            <span class="whatsapp-brand-icon" aria-hidden="true">
-                                <svg viewBox="0 0 32 32" focusable="false"><path d="M16 3.2A12.4 12.4 0 0 0 5.4 22l-1.8 6.8 7-1.8A12.4 12.4 0 1 0 16 3.2Zm0 22.7c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.1 1.1 1.1-4-.3-.4A10.2 10.2 0 1 1 16 25.9Zm5.8-7.7c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.2.2 2.4 3.7 5.8 5.1.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>
-                            </span>
-                            <span>WhatsApp Order</span>
-                        </a>
-                    </div>
-                    <div class="hero-trust-row" aria-label="Store highlights">
-                        <span><strong>4.8</strong> Customer Rating</span>
-                        <span><strong>25% OFF!!</strong> Selected Deals</span>
-                        <a class="hero-help-link" href="https://wa.me/254747690999?text=Hello%21%20How%20may%20we%20help%20you%20today%3F%F0%9F%98%83" target="_blank" rel="noopener noreferrer">
-                            <span class="whatsapp-brand-icon" aria-hidden="true">
-                                <svg viewBox="0 0 32 32" focusable="false"><path d="M16 3.2A12.4 12.4 0 0 0 5.4 22l-1.8 6.8 7-1.8A12.4 12.4 0 1 0 16 3.2Zm0 22.7c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.1 1.1 1.1-4-.3-.4A10.2 10.2 0 1 1 16 25.9Zm5.8-7.7c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.2.2 2.4 3.7 5.8 5.1.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>
-                            </span>
-                            <span><strong>24/7</strong> WhatsApp Help</span>
-                        </a>
-                    </div>
+                <div class="hero-hud hero-hud-left" aria-hidden="true">
+                    <span>System Active</span>
+                    <strong>Online</strong>
+                </div>
+                <div class="hero-hud hero-hud-bottom" aria-hidden="true">
+                    <span>Secure</span>
+                    <strong>Connection</strong>
+                </div>
+                <div class="hero-circuit hero-circuit-right" aria-hidden="true"></div>
+                <span class="hero-bg-word" id="heroTitle" aria-label="Omanutro">OMANUTRO</span>
+                <div class="hero-light hero-light-left" aria-hidden="true"></div>
+                <div class="hero-light hero-light-right" aria-hidden="true"></div>
+
+                <div class="hero-showcase" aria-label="Omanutro streetwear model">
+                    <div class="hero-model-frame">
+                        <img class="hero-model-image hero-model-female" src="assets/hero/omanutro-female-model.png" alt="Female model wearing Omanutro streetwear">
+                        <img class="hero-model-image hero-model-male" src="assets/hero/omanutro-male-model.png" alt="Male model wearing Omanutro streetwear">
+                    </div>           
                 </div>
 
-                <div class="hero-showcase" aria-label="Featured product preview">
-                    <div class="hero-orbit hero-orbit-large"></div>
-                    <div class="hero-orbit hero-orbit-small"></div>                
-                    <article class="hero-product-stage">
-                        <button class="hero-stage-nav hero-stage-prev" id="heroPrevButton" type="button" aria-label="Previous featured product">&#11164;</button>
-                        <img id="heroFeatureImage" src="" alt="Featured L&C product">
-                        <span class="hero-discount-badge">25% OFF!!</span>
-                        <button class="hero-stage-nav hero-stage-next" id="heroNextButton" type="button" aria-label="Next featured product">&#11166;</button>
-                    </article>
-                   
-                    <article class="hero-top-products">
-                        <div>
-                            <strong>Top Products</strong>
-                            <button class="link-button scroll-shop-link" id="scrollToShopButton" type="button">Scroll down to shop</button>
-                        </div>
-                        <div class="hero-product-strip" id="heroProductStrip" aria-label="Featured products"></div>
-                    </article>
+                <div class="hero-copy">
+                    <h1>
+                        <span class="hero-title-line">OMANUTRO Streetwear</span>
+                        <span class="hero-title-line">Engineered for the New Season</span>
+                    </h1>
+                    <p>Discover timeless pieces crafted to elevate your everyday.</p>
+                    <div class="hero-actions">
+                        <a href="/work-with-us.html" class="primary-button">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>
+                            Work With Us
+                        </a>
+                        <a href="#shopView" class="secondary-button hero-detail-button" id="scrollToShopButton">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                            SEE MORE DETAILS
+                        </a>
+                    </div>
                 </div>
             </section>
 
@@ -122,8 +136,10 @@
                             <label>
                                 Search
                                 <span class="search-control">
-                                    <input id="searchInput" type="search" list="searchSuggestions" placeholder="Sneakers, bags, audio...">
-                                    <button class="small-button search-button" id="searchButton" type="button">Search</button>
+                                    <input id="searchInput" type="search" list="searchSuggestions" placeholder="Hoodies, tees, caps...">
+                                    <button class="small-button search-button icon-only" id="searchButton" type="button" aria-label="Search catalog">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Z"/><path d="m16.2 16.2 4.4 4.4"/></svg>
+                                    </button>
                                 </span>
                             </label>
                             <label>
@@ -335,7 +351,7 @@
                                     <label>Tags<input type="text" id="productTags" placeholder="travel, laptop,canvas"></label>
                                 </div>
                                 <label>Image URL<input type="url" id="productImage" required placeholder="https://example.com/image.jpg"></label>
-                                <p class="muted-copy logo-help">Logo with UploadThing: upload your logo image, copy the returned file URL, then use that URL as the brand/logo image source in this page. For the current text logo, replace the content inside <code>.brand-mark</code> with an <code>&lt;img src=&quot;YOUR_UPLOADTHING_URL&quot; alt=&quot;L&amp;C Enterprise logo&quot;&gt;</code>.</p>
+                                <p class="muted-copy logo-help">Add your Omanutro product imagery here. Uploaded images will be used across the catalog, cart, and order flows.</p>
                                 <label class="upload-drop">
                                     Upload Image
                                     <input type="file" id="imageUpload" accept="image/*">  
@@ -353,12 +369,13 @@
                     </section>
         </main>
 
-        <footer class="site-footer">
+        <footer class="site-footer" id="footer">
             <div class="footer-panel">
                 <div class="footer-brand">
                     <span class="footer-kicker">Stay Connected</span>
-                    <strong>&copy; <span id="copyrightYear"></span> L&C Enterprises. All rights reserved.</strong>
-                    <span>🇬​​🇮​​🇿​​🇲​​🇴​ ​🇮​​🇳​​🇨​.</span>
+                    <span class="brand-mark footer-logo"><img src="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW" alt=""></span>
+                    <strong>&copy; <span id="copyrightYear"></span> Omanutro. All rights reserved.</strong>
+                    <span>Modern street fashion wear, ready for your next drop.</span>
                 </div>
                 <address class="footer-contact">
                     <span class="footer-kicker">Contact Us</span>
@@ -397,7 +414,9 @@
         <aside class="drawer" id="cartDrawer" aria-hidden="true">
             <div class="drawer-header">
                 <strong>Your Cart</strong>
-                <button class="icon-button" id="closeCartButton" aria-label="Close cart." title="Close">x</button>
+                <button class="icon-button" id="closeCartButton" aria-label="Close cart." title="Close">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                </button>
             </div>
             <div id="cartItems" class="cart-items"></div>
             <form class="checkout-form" id="checkoutForm">
@@ -508,7 +527,9 @@
             <form class="auth-card" id="authForm">
                 <div class="section-heading">
                     <span id="authTitle">Sign in</span>
-                    <button class="icon-button" type="button" id="closeAuthButton" aria-label="Close auth modal" title="Close">x</button>
+                    <button class="icon-button" type="button" id="closeAuthButton" aria-label="Close auth modal" title="Close">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                    </button>
                 </div>
                 <label class="register-only hidden">Name<input id="authName" autocomplete="name"></label>
                 <label class="register-only hidden">WhatsApp Phone<input id="authPhone" type="tel" autocomplete="tel" placeholder="2547XXXXXXXX"></label>
@@ -516,9 +537,8 @@
                 <label>Email<input id="authEmail" type="email" autocomplete="email" required></label>
                 <label>Password<input id="authPassword" type="password" autocomplete="current-password" required></label>
                 <button class="primary-button" type="submit" id="authSubmit">Login</button>
-                <button class="link-button" type="button" id="toggleAuthMode">Don't have an account? Register</button>
-                <button class="link-button" type="button" id="forgotPasswordButton">Forgot Password?</button>
-                <button class="link-button" type="button" id="backToLoginButton">Back to login</button>
+                <button class="link-button auth-signup-link" type="button" id="toggleAuthMode">Sign Up</button>
+                <button class="link-button" type="button" id="forgotPasswordButton">Forgot Password</button>
             </form>
         </div>
 
@@ -526,7 +546,9 @@
             <form class="auth-card" id="resetForm">
                 <div class="section-heading">
                     <span id="resetTitle">Reset password</span>
-                    <button class="icon-button" type="button" id="closeResetButton" aria-label="Close reset modal" title="Close">x</button>
+                    <button class="icon-button" type="button" id="closeResetButton" aria-label="Close reset modal" title="Close">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                    </button>
                 </div>
                 <p class="muted-copy" id="resetHelp">Enter your account email or phone and we will send a reset code to WhatsApp.</p>
                 <label>Email or phone<input id="resetIdentifier" autocomplete="username" required></label>
@@ -539,7 +561,9 @@
 
         <div class="modal hidden detail-modal" id="productDetailModal" role="dialog" aria-modal="true" aria-labelledby="productDetailTitle">
             <div class="product-detail-card">
-                <button class="icon-button detail-close" type="button" id="closeProductDetailButton" aria-label="Close product detail modal" title="Close">x</button>
+                <button class="icon-button detail-close" type="button" id="closeProductDetailButton" aria-label="Close product detail modal" title="Close">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                </button>
                 <div id="productDetailContent"></div>
             </div>
         </div>
@@ -547,7 +571,9 @@
 
         <div class="ad-popup hidden" id="dcashPopup">
             <div class="ad-popup-card">
-                <button class="ad-popup-close" id="closeDcashPopup" aria-label="Close Dcash popup" title="Close">X</button>
+                <button class="ad-popup-close" id="closeDcashPopup" aria-label="Close Dcash popup" title="Close">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+                </button>
 
                 <img
                 class="ad-popup-logo"
@@ -560,7 +586,7 @@
                 <h2> Pay Easily With Dcash</h2>
 
                 <p>
-                    Shop at L&C Enterprise and enjoy fast, simple, and secure digital payments with Dcash.
+                    Shop at Omanutro and enjoy fast, simple, and secure digital payments with Dcash.
                     It is built for quick checkout, smooth transfers, and convinient everyday shopping.
                 </p>
 

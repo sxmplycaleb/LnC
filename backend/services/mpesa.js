@@ -72,7 +72,7 @@ async function initiateStkPush({ phone, amount, orderId }) {
       PhoneNumber: phone,
       CallBackUrl: process.env.MPESA_CALLBACK_URL,
       AccountReference: orderId,
-      TransactionDesc: "L&C Enterprise checkout"
+      TransactionDesc: "LnC Streetwear checkout"
     })
   });
 

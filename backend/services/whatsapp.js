@@ -24,14 +24,14 @@ async function sendWhatsAppMessage({ to, message, context = {} }) {
 async function sendSignupCode(phone, code) {
   return sendWhatsAppMessage({
     to: phone,
-    message: `Your L&C Enterprise signup code is ${code}. It expires in 15 minutes.`
+    message: `Your LnC Streetwear signup code is ${code}. It expires in 15 minutes.`
   });
 }
 
 async function sendResetCode(user, code) {
   return sendWhatsAppMessage({
     to: user.phone || process.env.RESET_WHATSAPP_TO,
-    message: `L&C password reset code for ${user.email}: ${code}. It expires in 15 minutes.`,
+    message: `LnC password reset code for ${user.email}: ${code}. It expires in 15 minutes.`,
     context: { email: user.email }
   });
 }
@@ -40,7 +40,7 @@ async function sendOrderStatus(order) {
   const customer = order.customer || {};
   return sendWhatsAppMessage({
     to: customer.phone,
-    message: `L&C order ${order.id} update: ${order.status}. Payment status: ${order.paymentStatus}.`,
+    message: `LnC order ${order.id} update: ${order.status}. Payment status: ${order.paymentStatus}.`,
     context: { orderId: order.id, status: order.status }
   });
 }

@@ -97,9 +97,17 @@ small { display: block; color: var(--muted); }
   height: 38px;
   place-items: center;
   color: #fff;
-  background: var(--accent);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  border: 1px solid var(--line);
   border-radius: 8px;
   font-size: 12px;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .form-stack, label {
@@ -460,4 +468,285 @@ td strong { display: block; }
   .bar-row { grid-template-columns: 72px minmax(0, 1fr) 58px; }
   .intro-actions { width: 100%; }
   .intro-actions > * { flex: 1 1 140px; }
+}
+
+/* iOS-style glass button system */
+:root {
+  --ios-button-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06)),
+    rgba(38, 18, 36, 0.54);
+  --ios-button-bg-hover:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.29), rgba(255, 255, 255, 0.09)),
+    rgba(54, 24, 50, 0.66);
+  --ios-button-primary:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08)),
+    color-mix(in srgb, var(--accent) 78%, rgba(20, 12, 20, 0.58));
+  --ios-button-danger:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.07)),
+    rgba(220, 38, 38, 0.68);
+  --ios-button-border: rgba(255, 255, 255, 0.24);
+  --ios-button-border-strong: rgba(255, 255, 255, 0.42);
+  --ios-button-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 24px rgba(0, 0, 0, 0.2);
+  --ios-button-shadow-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    0 14px 32px rgba(0, 0, 0, 0.26);
+}
+
+:root[data-theme="light"] {
+  --ios-button-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.44)),
+    rgba(255, 255, 255, 0.62);
+  --ios-button-bg-hover:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.58)),
+    rgba(255, 255, 255, 0.76);
+  --ios-button-primary:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.12)),
+    color-mix(in srgb, var(--accent-strong) 76%, #ffffff 12%);
+  --ios-button-danger:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.1)),
+    rgba(220, 38, 38, 0.72);
+  --ios-button-border: rgba(255, 255, 255, 0.7);
+  --ios-button-border-strong: rgba(255, 255, 255, 0.88);
+  --ios-button-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.34),
+    0 10px 22px rgba(139, 69, 96, 0.15);
+  --ios-button-shadow-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.42),
+    0 14px 30px rgba(139, 69, 96, 0.2);
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.icon-button,
+.avatar-button,
+.filter-button,
+.table-action,
+.pager,
+.dropdown button,
+.dropdown a,
+.nav a {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--ink);
+  background: var(--ios-button-bg);
+  border: 1px solid var(--ios-button-border);
+  border-radius: 14px;
+  box-shadow: var(--ios-button-shadow);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+  overflow: hidden;
+  transform: translateZ(0);
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.primary-button::before,
+.secondary-button::before,
+.danger-button::before,
+.icon-button::before,
+.avatar-button::before,
+.filter-button::before,
+.table-action::before,
+.pager::before,
+.dropdown button::before,
+.dropdown a::before,
+.nav a::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto;
+  z-index: -1;
+  height: 48%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0));
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.primary-button {
+  color: #fff;
+  background: var(--ios-button-primary);
+  border-color: var(--ios-button-border-strong);
+}
+
+.danger-button {
+  color: #fff;
+  background: var(--ios-button-danger);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.icon-button,
+.avatar-button {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.primary-button svg,
+.secondary-button svg,
+.danger-button svg,
+.icon-button svg,
+.avatar-button svg,
+.filter-button svg,
+.table-action svg,
+.pager svg,
+.nav-icon svg,
+.dropdown button svg,
+.dropdown a svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-button svg,
+.avatar-button svg,
+.nav-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.nav a {
+  justify-content: flex-start;
+  min-height: 44px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.nav a.active,
+.nav a:hover {
+  color: var(--ink);
+  background: var(--ios-button-bg-hover);
+  border-color: var(--ios-button-border);
+  box-shadow: var(--ios-button-shadow);
+}
+
+.nav-icon {
+  color: currentColor;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.danger-button:hover,
+.icon-button:hover,
+.avatar-button:hover,
+.filter-button:hover,
+.table-action:hover,
+.pager:hover,
+.dropdown button:hover,
+.dropdown a:hover {
+  background: var(--ios-button-bg-hover);
+  border-color: var(--ios-button-border-strong);
+  box-shadow: var(--ios-button-shadow-hover);
+  transform: translateY(-1px) scale(1.01);
+}
+
+.primary-button:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.1)),
+    color-mix(in srgb, var(--accent-strong) 82%, var(--accent) 18%);
+}
+
+.danger-button:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.09)),
+    rgba(220, 38, 38, 0.8);
+}
+
+.primary-button:active,
+.secondary-button:active,
+.danger-button:active,
+.icon-button:active,
+.avatar-button:active,
+.filter-button:active,
+.table-action:active,
+.pager:active,
+.dropdown button:active,
+.dropdown a:active,
+.nav a:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: var(--ios-button-shadow);
+}
+
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.danger-button:focus-visible,
+.icon-button:focus-visible,
+.avatar-button:focus-visible,
+.filter-button:focus-visible,
+.table-action:focus-visible,
+.pager:focus-visible,
+.dropdown button:focus-visible,
+.dropdown a:focus-visible,
+.nav a:focus-visible {
+  outline: 0;
+  box-shadow: var(--ios-button-shadow-hover), 0 0 0 3px color-mix(in srgb, var(--accent) 26%, transparent);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled,
+.danger-button:disabled,
+.icon-button:disabled,
+.filter-button:disabled,
+.table-action:disabled,
+.pager:disabled {
+  cursor: not-allowed;
+  opacity: 0.54;
+  transform: none;
+}
+
+@media (max-width: 620px) {
+  .primary-button,
+  .secondary-button,
+  .danger-button,
+  .filter-button,
+  .table-action,
+  .pager {
+    min-height: 44px;
+  }
+
+  .icon-button,
+  .avatar-button {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primary-button,
+  .secondary-button,
+  .danger-button,
+  .icon-button,
+  .avatar-button,
+  .filter-button,
+  .table-action,
+  .pager,
+  .dropdown button,
+  .dropdown a,
+  .nav a {
+    transition: none;
+  }
 }
