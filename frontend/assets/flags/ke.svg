@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" role="img" aria-label="Kenya flag">
+  <path fill="#000" d="M0 0h900v600H0z"/>
+  <path fill="#fff" d="M0 180h900v240H0z"/>
+  <path fill="#bb0000" d="M0 200h900v200H0z"/>
+  <path fill="#fff" d="M0 400h900v20H0z"/>
+  <path fill="#006600" d="M0 420h900v180H0z"/>
+  <path fill="#fff" d="M0 180h900v20H0z"/>
+  <ellipse cx="450" cy="300" fill="#bb0000" rx="83" ry="176"/>
+  <path fill="#000" d="M450 124c38 42 61 102 61 176s-23 134-61 176c-38-42-61-102-61-176s23-134 61-176z"/>
+  <path fill="#fff" d="M450 124c8 42 13 102 13 176s-5 134-13 176c-8-42-13-102-13-176s5-134 13-176z"/>
+  <path fill="#fff" d="m298 117 11-8 142 191-11 8zm304 0-142 191-11-8 142-191z"/>
+  <path fill="#000" d="m306 104 9-7 142 191-9 7zm288 0-142 191-9-7L585 97z"/>
+  <path fill="#fff" d="M425 203h50v194h-50z"/>
+  <path fill="#bb0000" d="M438 203h24v194h-24z"/>
+</svg>

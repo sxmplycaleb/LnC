@@ -1,12 +1,31 @@
 (function () {
-  const CART_KEY = "commerce-cart";
+  const LEGACY_CART_KEY = "commerce-cart";
+  const CART_KEY_PREFIX = "omanutro-cart";
 
-  function load() {
-    return JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+  function ownerKey(user) {
+    const ownerId = user?.id || user?.email;
+    return ownerId ? `${CART_KEY_PREFIX}:${ownerId}` : `${CART_KEY_PREFIX}:guest`;
   }
 
-  function save(cart) {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  function normalize(cart) {
+    return (Array.isArray(cart) ? cart : [])
+      .map((item) => ({
+        productId: item.productId,
+        quantity: Math.max(1, Number(item.quantity) || 1)
+      }))
+      .filter((item) => item.productId);
+  }
+
+  function load(user) {
+    return normalize(JSON.parse(localStorage.getItem(ownerKey(user)) || "[]"));
+  }
+
+  function save(cart, user) {
+    localStorage.setItem(ownerKey(user), JSON.stringify(normalize(cart)));
+  }
+
+  function clearLegacy() {
+    localStorage.removeItem(LEGACY_CART_KEY);
   }
 
   function total(cart, products) {
@@ -24,7 +43,9 @@
   window.CommerceCart = {
     load,
     save,
+    clearLegacy,
     total,
     availableOnly
   };
 })();
+

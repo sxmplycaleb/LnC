@@ -9,5 +9,6 @@ const config = require("./config");
 const app = createApp();
 
 app.listen(config.port, () => {
-  console.log(`LnC Streetwear running at http://localhost:${config.port}`);
+  console.log(`OMANUTRO running at http://localhost:${config.port}`);
 });
+

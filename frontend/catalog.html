@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalog | Omanutro</title>
-    <meta name="description" content="Shop Omanutro drops and manage your street fashion cart.">
+    <title>Catalog | OMANUTRO</title>
+    <meta name="description" content="Shop OMANUTRO drops and manage your street fashion cart.">
     <link rel="icon" href="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW">
 
     <script>
@@ -18,42 +18,34 @@
 
 <body>
     <header class="topbar">
-        <a class="brand" href="/" aria-label="Omanutro home.">
+        <a class="brand" href="/" aria-label="OMANUTRO home.">
             <span class="brand-mark"><img src="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW" alt=""></span>
-            <span>Omanutro</span>
+            <span>OMANUTRO</span>
         </a>
         <button class="mobile-menu-toggle icon-button" id="mobileMenuButton" type="button" aria-label="Open navigation" aria-expanded="false">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
 
         <nav class="nav-tabs" aria-label="Primary navigation">
-            <div class="topbar-search search-control">
-                <input id="topSearchInput" type="search" list="searchSuggestions" placeholder="Search drops, fits, and categories..." aria-label="Search drops, fits, and categories">
-                <button class="small-button search-button icon-only" id="topSearchButton" type="button" aria-label="Search">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"/></svg>
-                </button>
-            </div>
-            <button class="nav-tab auth-only hidden active" data-view="shop">Shop</button>
+            <a class="nav-tab" href="/work-with-us.html">Work With Us</a>
             <button class="nav-tab auth-only hidden" data-view="orders">Orders</button>
             <button class="nav-tab auth-only hidden" data-view="cart">Cart</button>
             <datalist id="searchSuggestions"></datalist>
         </nav>
 
         <div class="topbar-actions">
-            <button class="theme-toggle" id="themeToggleButton" type="button" aria-label="Switch Theme">
-                <span class="toggle-icon sun-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4V2m0 20v-2m8-8h2M2 12h2m14.4-6.4 1.4-1.4M4.2 19.8l1.4-1.4m0-12.8L4.2 4.2m15.6 15.6-1.4-1.4M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg></span>
-                <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
-                <span class="toggle-icon moon-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 15.3A8.4 8.4 0 0 1 8.7 4a8.6 8.6 0 1 0 11.3 11.3Z"/></svg></span>
+            <button class="theme-toggle" id="themeToggleButton" type="button" role="switch" aria-checked="false" aria-label="Switch theme">
+                <span class="toggle-icon sun-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.1"/><path d="M12 2.8v2.3M12 18.9v2.3M21.2 12h-2.3M5.1 12H2.8M18.5 5.5l-1.6 1.6M7.1 16.9l-1.6 1.6M18.5 18.5l-1.6-1.6M7.1 7.1 5.5 5.5"/></svg></span>
+                <span class="toggle-icon moon-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18.9 15.4A7.2 7.2 0 0 1 8.6 5.1 7.9 7.9 0 1 0 18.9 15.4Z"/></svg></span>
                 <span class="theme-label visually-hidden"></span>
             </button>
 
-            <label class="currency-selector" aria-label="Select currency">
-                <span id="currencyFlag">🇺🇸</span>
-                <select id="currencySelect">
-                    <option value="USD">🇺🇸 USD</option>
-                    <option value="KES">🇰🇪 KES</option>
-                </select>
-            </label>
+            <div class="topbar-search search-control">
+                <input id="topSearchInput" type="search" list="searchSuggestions" placeholder="Search" aria-label="Search drops, fits, and categories">
+                <button class="small-button search-button icon-only" id="topSearchButton" type="button" aria-label="Search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"/><path d="m15.6 15.6 4.2 4.2"/></svg>
+                </button>
+            </div>
 
             <button class="icon-button wishlist-button" type="button" data-account-action="wishlist" aria-label="Open wishlist" title="Wishlist">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/></svg>
@@ -61,8 +53,26 @@
 
             <button class="icon-button" id="cartButton" aria-label="View Cart." title="Cart">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 13H7L6 8Zm3 0a3 3 0 0 1 6 0"/></svg>
-                <span class="cart-count" id="cartCount">0</span> 
+                <span class="cart-count hidden" id="cartCount">0</span> 
             </button>
+
+            <div class="currency-dropdown" id="currencyDropdown">
+                <button class="currency-trigger" id="currencySelect" type="button" aria-label="Select currency" aria-haspopup="listbox" aria-expanded="false">
+                    <img class="currency-flag" id="currencyFlag" src="/assets/flags/us.svg" alt="" aria-hidden="true">
+                    <span class="currency-code" id="currencyLabel">USD</span>
+                </button>
+                <div class="currency-menu hidden" id="currencyMenu" role="listbox" aria-label="Select currency">
+                    <button class="currency-menu-option" type="button" role="option" data-currency="KES" aria-selected="false" aria-label="Kenyan Shilling, KES">
+                        <img class="currency-flag" src="/assets/flags/ke.svg" alt="" aria-hidden="true">
+                        <span>KES</span>
+                    </button>
+                    <button class="currency-menu-option" type="button" role="option" data-currency="USD" aria-selected="true" aria-label="United States Dollar, USD">
+                        <img class="currency-flag" src="/assets/flags/us.svg" alt="" aria-hidden="true">
+                        <span>USD</span>
+                    </button>
+                </div>
+                <svg class="currency-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+            </div>
 
             <div class="account-menu" id="signedOutMenu">
                 <button class="icon-button account-trigger" id="accountMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">
@@ -105,7 +115,7 @@
                 <span class="search-control">
                     <input id="searchInput" type="search" list="searchSuggestions" placeholder="Search hoodies, tees, caps...">
                     <button class="small-button search-button icon-only" id="searchButton" type="button" aria-label="Search catalog">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"/></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"/><path d="m15.6 15.6 4.2 4.2"/></svg>
                     </button>
                 </span>
             </label>
@@ -301,8 +311,8 @@
                 <label>Password<input id="authPassword" type="password" autocomplete="current-password" required></label>
 
                 <button class="primary-button" type="submit" id="authSubmit">Login</button>
-                <button class="link-button" type="button" id="toggleAuthMode">Don't have an account? Register</button>
-                <button class="link-button" type="button" id="forgotPasswordButton">Forgot Password?</button>                   
+                <button class="link-button auth-signup-link" type="button" id="toggleAuthMode">Sign Up</button>
+                <button class="link-button" type="button" id="forgotPasswordButton">Forgot Password</button>                   
             </form>
         </div>
 
@@ -338,7 +348,7 @@
             <div class="footer-brand">
                 <span class="footer-kicker">Stay Connected</span>
                 <span class="brand-mark footer-logo"><img src="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW" alt=""></span>
-                <strong>&copy; <span id="copyrightYear"></span> Omanutro. All rights reserved.</strong>
+                <strong>&copy; <span id="copyrightYear"></span> OMANUTRO. All rights reserved.</strong>
                 <span>Street fashion wear with quick support and simple checkout.</span>
             </div>
             <address class="footer-contact">
@@ -382,3 +392,6 @@
 
 </body>
 </html>
+
+
+

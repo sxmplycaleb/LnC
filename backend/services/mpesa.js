@@ -72,7 +72,7 @@ async function initiateStkPush({ phone, amount, orderId }) {
       PhoneNumber: phone,
       CallBackUrl: process.env.MPESA_CALLBACK_URL,
       AccountReference: orderId,
-      TransactionDesc: "LnC Streetwear checkout"
+      TransactionDesc: "OMANUTRO checkout"
     })
   });
 
@@ -88,3 +88,4 @@ module.exports = {
   hasMpesaConfig,
   initiateStkPush
 };
+

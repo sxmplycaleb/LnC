@@ -18,7 +18,7 @@
     </head>
     <body>
         <header class="topbar">
-            <a class="brand" href="#shop" aria-label="Omanutro home.">
+            <a class="brand" href="/" aria-label="OMANUTRO home.">
         
                 <span>OMANUTRO</span>
             </a>
@@ -29,35 +29,54 @@
                 <a class="nav-tab" href="#footer">About</a>
                 <a class="nav-tab active" href="#top">Home</a>
                 <a class="nav-tab" href="#shopView">Collection</a>
-                <button class="nav-tab" data-view="shop">Shop</button>                
+                <a class="nav-tab" href="/work-with-us.html">Work With Us</a>
                 <datalist id="searchSuggestions"></datalist>
             </nav>
             <div class="topbar-actions">
-                <button class="icon-button wishlist-button" type="button" data-account-action="wishlist" aria-label="Open wishlist" title="Wishlist">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/></svg>
-                </button>
-
                 <div class="topbar-search search-control">
                     <input id="topSearchInput" type="search" list="searchSuggestions" placeholder="Search" aria-label="Search drops, fits, and categories">
                     <button class="small-button search-button icon-only" id="topSearchButton" type="button" aria-label="Search">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Z"/><path d="m16.2 16.2 4.4 4.4"/></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"/><path d="m15.6 15.6 4.2 4.2"/></svg>
                     </button>
                 </div>
                 <button 
                     class="theme-toggle"
                     id="themeToggleButton"
                     type="button"
+                    role="switch"
+                    aria-checked="false"
                     aria-label="Switch to dark theme">
-                    <span class="toggle-icon sun-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2v2.1M12 18.7v2.1M20.8 12h-2.1M5.3 12H3.2M18.2 5.8l-1.5 1.5M7.3 16.7l-1.5 1.5M18.2 18.2l-1.5-1.5M7.3 7.3 5.8 5.8"/><circle cx="12" cy="12" r="3.6"/></svg></span>
-                    <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
-                    <span class="toggle-icon moon-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18.8 15.8A7.4 7.4 0 0 1 8.2 5.2 7.9 7.9 0 1 0 18.8 15.8Z"/></svg></span>
+                    <span class="toggle-icon sun-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.1"/><path d="M12 2.8v2.3M12 18.9v2.3M21.2 12h-2.3M5.1 12H2.8M18.5 5.5l-1.6 1.6M7.1 16.9l-1.6 1.6M18.5 18.5l-1.6-1.6M7.1 7.1 5.5 5.5"/></svg></span>
+                    <span class="toggle-icon moon-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18.9 15.4A7.2 7.2 0 0 1 8.6 5.1 7.9 7.9 0 1 0 18.9 15.4Z"/></svg></span>
                     <span class="theme-label visually-hidden">Dark</span>
                 </button>              
 
+                <button class="icon-button wishlist-button" type="button" data-account-action="wishlist" aria-label="Open wishlist" title="Wishlist">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/></svg>
+                </button>
+
                 <button class="icon-button" id="cartButton" aria-label="View cart" title="Cart">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 13H7L6 8Zm3 0a3 3 0 0 1 6 0"/></svg>
-                    <span class="cart-count" id="cartCount">0</span>
+                    <span class="cart-count hidden" id="cartCount">0</span>
                 </button>
+
+                <div class="currency-dropdown" id="currencyDropdown">
+                    <button class="currency-trigger" id="currencySelect" type="button" aria-label="Select currency" aria-haspopup="listbox" aria-expanded="false">
+                        <img class="currency-flag" id="currencyFlag" src="/assets/flags/us.svg" alt="" aria-hidden="true">
+                        <span class="currency-code" id="currencyLabel">USD</span>
+                    </button>
+                    <div class="currency-menu hidden" id="currencyMenu" role="listbox" aria-label="Select currency">
+                        <button class="currency-menu-option" type="button" role="option" data-currency="KES" aria-selected="false" aria-label="Kenyan Shilling, KES">
+                            <img class="currency-flag" src="/assets/flags/ke.svg" alt="" aria-hidden="true">
+                            <span>KES</span>
+                        </button>
+                        <button class="currency-menu-option" type="button" role="option" data-currency="USD" aria-selected="true" aria-label="United States Dollar, USD">
+                            <img class="currency-flag" src="/assets/flags/us.svg" alt="" aria-hidden="true">
+                            <span>USD</span>
+                        </button>
+                    </div>
+                    <svg class="currency-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+                </div>
 
                 <div class="account-menu" id="signedOutMenu">
                     <button class="icon-button account-trigger" id="accountMenuButton" type="button" aria-label="Open account menu" aria-expanded="false">
@@ -97,14 +116,14 @@
                     <strong>Connection</strong>
                 </div>
                 <div class="hero-circuit hero-circuit-right" aria-hidden="true"></div>
-                <span class="hero-bg-word" id="heroTitle" aria-label="Omanutro">OMANUTRO</span>
+                <span class="hero-bg-word" id="heroTitle" aria-label="OMANUTRO">OMANUTRO</span>
                 <div class="hero-light hero-light-left" aria-hidden="true"></div>
                 <div class="hero-light hero-light-right" aria-hidden="true"></div>
 
-                <div class="hero-showcase" aria-label="Omanutro streetwear model">
+                <div class="hero-showcase" aria-label="OMANUTRO streetwear model">
                     <div class="hero-model-frame">
-                        <img class="hero-model-image hero-model-female" src="assets/hero/omanutro-female-model.png" alt="Female model wearing Omanutro streetwear">
-                        <img class="hero-model-image hero-model-male" src="assets/hero/omanutro-male-model.png" alt="Male model wearing Omanutro streetwear">
+                        <img class="hero-model-image hero-model-female" src="assets/hero/OMANUTRO-female-model.png" alt="Female model wearing OMANUTRO streetwear">
+                        <img class="hero-model-image hero-model-male" src="assets/hero/OMANUTRO-male-model.png" alt="Male model wearing OMANUTRO streetwear">
                     </div>           
                 </div>
 
@@ -138,7 +157,7 @@
                                 <span class="search-control">
                                     <input id="searchInput" type="search" list="searchSuggestions" placeholder="Hoodies, tees, caps...">
                                     <button class="small-button search-button icon-only" id="searchButton" type="button" aria-label="Search catalog">
-                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Z"/><path d="m16.2 16.2 4.4 4.4"/></svg>
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"/><path d="m15.6 15.6 4.2 4.2"/></svg>
                                     </button>
                                 </span>
                             </label>
@@ -352,7 +371,7 @@
                                     <label>Tags<input type="text" id="productTags" placeholder="travel, laptop,canvas"></label>
                                 </div>
                                 <label>Image URL<input type="url" id="productImage" required placeholder="https://example.com/image.jpg"></label>
-                                <p class="muted-copy logo-help">Add your Omanutro product imagery here. Uploaded images will be used across the catalog, cart, and order flows.</p>
+                                <p class="muted-copy logo-help">Add your OMANUTRO product imagery here. Uploaded images will be used across the catalog, cart, and order flows.</p>
                                 <label class="upload-drop">
                                     Upload Image
                                     <input type="file" id="imageUpload" accept="image/*">  
@@ -375,7 +394,7 @@
                 <div class="footer-brand">
                     <span class="footer-kicker">Stay Connected</span>
                     <span class="brand-mark footer-logo"><img src="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW" alt=""></span>
-                    <strong>&copy; <span id="copyrightYear"></span> Omanutro. All rights reserved.</strong>
+                    <strong>&copy; <span id="copyrightYear"></span> OMANUTRO. All rights reserved.</strong>
                     <span>Modern street fashion wear, ready for your next drop.</span>
                 </div>
                 <address class="footer-contact">
@@ -576,16 +595,18 @@
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
                 </button>
 
-                <img
-                class="ad-popup-logo"
-                src="https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8y9MJOL5bG2ICtsw4XvE3JPnOQmDL0zhdxkHl1"
-                alt="Dcash logo"
-                >            
+                <span class="ad-popup-logo-shell">
+                    <img
+                        class="ad-popup-logo"
+                        src="/assets/brands/dcash-cutout.png"
+                        alt="Dcash logo"
+                    >
+                </span>
                 
                 <h2> Pay Easily With Dcash</h2>
 
                 <p>
-                    Shop at Omanutro and enjoy fast, simple, and secure digital payments with Dcash.
+                    Shop at OMANUTRO and enjoy fast, simple, and secure digital payments with Dcash.
                     It is built for quick checkout, smooth transfers, and convinient everyday shopping.
                 </p>
 
@@ -629,3 +650,8 @@
         
             
         
+
+
+
+
+

@@ -9,7 +9,7 @@ const state = {
     authToken: window.CommerceApi?.getToken() || "",
     products: [],
     categories: [],
-    cart: window.CommerceCart?.load() || JSON.parse(localStorage.getItem("commerce-cart") || "[]"),
+    cart: [],
     authMode: "login",
     editProductId: null,
     theme: getInitialsTheme(),
@@ -28,6 +28,18 @@ const state = {
 const $ = (selector) => document.querySelector(selector); 
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const USD_TO_KES_RATE = 130;
+const CURRENCIES = {
+  KES: {
+    code: "KES",
+    flag: "/assets/flags/ke.svg",
+    name: "Kenyan Shilling"
+  },
+  USD: {
+    code: "USD",
+    flag: "/assets/flags/us.svg",
+    name: "United States Dollar"
+  }
+};
 const money = (value) => {
   const amount = Number(value) || 0;
   if (state.currency === "KES") return `KES ${Math.round(amount * USD_TO_KES_RATE).toLocaleString("en-KE")}`;
@@ -93,7 +105,7 @@ function applyTheme(theme) {
     const label = button.querySelector(".theme-label");
     
     if (label) {
-      label.textContent = state.theme === "light" ? "Dark mode" : "Light mode";
+      label.textContent = state.theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
     } else {
       button.textContent = state.theme === "light" ? "Dark" : "Light";
     }
@@ -101,6 +113,8 @@ function applyTheme(theme) {
     button.setAttribute("title", `Switch to ${state.theme === "light" ? "dark" : "light"} theme`);
     button.setAttribute("aria-label", `Switch to ${state.theme === "light" ? "dark" : "light"} theme`);
     button.setAttribute("aria-pressed", String(state.theme === "dark"));
+    button.setAttribute("role", "switch");
+    button.setAttribute("aria-checked", String(state.theme === "dark"));
 }
 
 function toggleTheme() {
@@ -115,7 +129,7 @@ function toast(message) {
 }
 
 function persistCart() {
-  window.CommerceCart?.save(state.cart);
+  if (state.user) window.CommerceCart?.save(state.cart, state.user);
   renderCart();
 }
 
@@ -168,16 +182,20 @@ function updateAuthUI() {
 
   $$(".auth-only").forEach((node) => node.classList.toggle("hidden", !state.user));
   $$(".admin-only").forEach((node) => node.classList.toggle("hidden", state.user?.role !== "admin"));
+  renderCart();
 }
 
 async function loadMe() {
   try {
     const data = await api("/api/auth/me");
     state.user = data.user;
+    state.cart = window.CommerceCart?.load(state.user) || [];
+    window.CommerceCart?.clearLegacy?.();
   } catch (error) {
     if (error.status !== 401) throw error;
     state.user = null;
     state.authToken = "";
+    state.cart = [];
     window.CommerceAuth?.clearSession();
   }
   updateAuthUI();
@@ -221,7 +239,7 @@ function renderProducts() {
 
   if (!visibleProducts.length) {
     grid.innerHTML = emptyStateMarkup({
-      title: state.categories.length ? "No drops match those filters." : "The first Omanutro drop is waiting.",
+      title: state.categories.length ? "No drops match those filters." : "The first OMANUTRO drop is waiting.",
       message: state.categories.length
         ? "Try widening your filters to see more streetwear pieces."
         : "Your storefront is clean and ready. Add products from the admin dashboard when your collection is ready.",
@@ -301,7 +319,7 @@ function clearCatalogFilters() {
 function emptyStateMarkup({ title, message, action = "" }) {
   return `
     <div class="empty-state wide-panel" role="status">
-      <span class="empty-state-icon" aria-hidden="true">Omanutro</span>
+      <span class="empty-state-icon" aria-hidden="true">OMANUTRO</span>
       <strong>${escapeHtml(title)}</strong>
       <p>${escapeHtml(message)}</p>
       ${action}
@@ -316,7 +334,7 @@ function renderHeroPreview() {
     const featureImage = $("#heroFeatureImage");
     if (featureImage) {
       featureImage.src = "https://3z8qdlgzk1.ufs.sh/f/ryTwMvEKto8yPUX3YUS2uFD4jNVqJsLIBAHi70Tomd1ghOzW";
-      featureImage.alt = "Omanutro logo";
+      featureImage.alt = "OMANUTRO logo";
     }
     if (strip) {
       strip.innerHTML = `<div class="hero-empty-drop">Add your first drop in the dashboard.</div>`;
@@ -352,7 +370,7 @@ function renderHeroProduct() {
   const product = state.heroProducts[state.heroIndex] || state.heroProducts[0];
   featureImage.classList.remove("is-swapping");
   featureImage.src = productImageSrc(product);
-  featureImage.alt = `${product.name} from Omanutro`;
+  featureImage.alt = `${product.name} from OMANUTRO`;
   window.requestAnimationFrame?.(() => featureImage.classList.add("is-swapping"));
 }
 
@@ -439,27 +457,46 @@ function animateToProducts() {
 function applyCurrency(currency) {
   state.currency = currency === "KES" ? "KES" : "USD";
   localStorage.setItem("commerce-currency", state.currency);
-  const button = $("#currencyToggleButton");
+  const details = CURRENCIES[state.currency];
   const label = $("#currencyLabel");
-  const select = $("#currencySelect");
+  const trigger = $("#currencySelect");
   const flag = $("#currencyFlag");
   if (label) label.textContent = state.currency;
-  if (select) select.value = state.currency;
-  if (flag) flag.textContent = state.currency === "KES" ? "🇰🇪" : "🇺🇸";
-  if (button) {
-    const nextCurrency = state.currency === "USD" ? "KES" : "USD";
-    button.setAttribute("aria-label", `Switch currency to ${nextCurrency}`);
-    button.setAttribute("title", `Switch currency to ${nextCurrency}`);
+  if (trigger) {
+    trigger.setAttribute("aria-label", `Select currency, current currency ${details.name}, ${details.code}`);
+    trigger.dataset.currency = details.code;
   }
+  if (flag) {
+    flag.src = details.flag;
+    flag.alt = "";
+  }
+  $$(".currency-menu-option").forEach((option) => {
+    const selected = option.dataset.currency === state.currency;
+    option.classList.toggle("active", selected);
+    option.setAttribute("aria-selected", String(selected));
+  });
   if ($("#priceLabel") && $("#priceRange")) $("#priceLabel").textContent = money($("#priceRange").value);
   updatePriceSelectLabels();
 }
 
-function toggleCurrency() {
-  applyCurrency(state.currency === "USD" ? "KES" : "USD");
+function setCurrencyMenuOpen(open) {
+  const trigger = $("#currencySelect");
+  const menu = $("#currencyMenu");
+  if (!trigger || !menu) return;
+  trigger.setAttribute("aria-expanded", String(open));
+  menu.classList.toggle("hidden", !open);
+}
+
+function refreshCurrencyDisplays() {
   renderProducts();
   renderCart();
   if (!$("#productDetailModal")?.classList.contains("hidden")) closeProductDetail();
+  if ($("#ordersView")?.classList.contains("active")) loadOrders().catch((error) => toast(error.message));
+  if ($("#adminView")?.classList.contains("active")) loadAdminOrders().catch((error) => toast(error.message));
+}
+function toggleCurrency() {
+  applyCurrency(state.currency === "USD" ? "KES" : "USD");
+  refreshCurrencyDisplays();
 }
 
 function setMobileMenu(open) {
@@ -585,6 +622,7 @@ function renderProductReviews(reviews = []) {
   return `<div class="product-reviews">${featured}</div>`;
 }
 function addToCart(productId) {
+  if (!requireSignin("Sign in to add items to your cart.")) return;
   const product = state.products.find((entry) => entry.id === productId);
   if (!product || product.stock < 1) return;
   const line = state.cart.find((item) => item.productId === productId);
@@ -707,6 +745,8 @@ async function checkout(event) {
   }
 
   const data = await api("/api/orders", { method: "POST", body: payload.body });
+  state.cart = [];
+  persistCart();
   $("#cartDrawer")?.classList.remove("open");
   if (data.checkoutUrl) {
     location.href = data.checkoutUrl;
@@ -1007,6 +1047,7 @@ async function submitAuth(event) {
   state.user = data.user;
   state.authToken = data.token || "";
   window.CommerceAuth?.rememberSession(state.authToken);
+  state.cart = window.CommerceCart?.load(state.user) || [];
   $("#authModal").classList.add("hidden");
   updateAuthUI();
   toast(`Welcome, ${state.user.name}.`);
@@ -1029,6 +1070,7 @@ async function logout() {
   await api("/api/auth/logout", { method: "POST" });
   state.user = null;
   state.authToken = "";
+  state.cart = [];
   window.CommerceAuth?.clearSession();
   updateAuthUI();
   toast("Signed out.");
@@ -1176,6 +1218,24 @@ function runSearchFrom(source) {
   loadProducts().catch((error) => toast(error.message));
 }
 
+function setTopSearchExpanded(expanded) {
+  const search = $(".topbar-search");
+  const input = $("#topSearchInput");
+  if (!search || !input) return;
+  search.classList.toggle("is-expanded", expanded);
+  input.tabIndex = expanded ? 0 : -1;
+  input.setAttribute("aria-hidden", String(!expanded));
+  if (expanded) input.focus();
+}
+
+function collapseTopSearchIfEmpty() {
+  const input = $("#topSearchInput");
+  if (!input?.value.trim()) {
+    input.blur();
+    setTopSearchExpanded(false);
+  }
+}
+
 function updatePaymentFields() {
   const selected = $("#paymentMethod")?.value;
   $("#cardFields")?.classList.toggle("hidden", selected !== "credit_card");
@@ -1245,12 +1305,21 @@ function bindEvents() {
   $("#scrollToShopButton")?.addEventListener("click", animateToProducts);
   $("#heroPrevButton")?.addEventListener("click", () => moveHeroProduct(-1));
   $("#heroNextButton")?.addEventListener("click", () => moveHeroProduct(1));
-  $("#currencyToggleButton")?.addEventListener("click", toggleCurrency);
-  $("#currencySelect")?.addEventListener("change", (event) => {
-    applyCurrency(event.target.value);
-    renderProducts();
-    renderCart();
-    if (!$("#productDetailModal")?.classList.contains("hidden")) closeProductDetail();
+  $("#currencySelect")?.addEventListener("click", () => {
+    setCurrencyMenuOpen($("#currencyMenu")?.classList.contains("hidden"));
+  });
+  $$(".currency-menu-option").forEach((option) => {
+    option.addEventListener("click", () => {
+      applyCurrency(option.dataset.currency);
+      setCurrencyMenuOpen(false);
+      refreshCurrencyDisplays();
+    });
+  });
+  document.addEventListener("click", (event) => {
+    if (!$("#currencyDropdown")?.contains(event.target)) setCurrencyMenuOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setCurrencyMenuOpen(false);
   });
   $("#mobileMenuButton")?.addEventListener("click", () => {
     setMobileMenu(!document.body.classList.contains("mobile-nav-open"));
@@ -1276,13 +1345,22 @@ function bindEvents() {
   const topSearchInput = $("#topSearchInput");
   const searchInput = $("#searchInput");
   if (topSearchInput && searchInput) {
+    setTopSearchExpanded(Boolean(topSearchInput.value.trim()));
+    topSearchInput.addEventListener("focus", () => setTopSearchExpanded(true));
     topSearchInput.addEventListener("input", () => {
+      setTopSearchExpanded(true);
       searchInput.value = topSearchInput.value;
       loadSearchSuggestions(topSearchInput.value).catch(() => {});
       loadProducts().catch((error) => toast(error.message));
     });
   }
-  $("#topSearchButton")?.addEventListener("click", () => runSearchFrom("top"));
+  $("#topSearchButton")?.addEventListener("click", () => {
+    if (!$(".topbar-search")?.classList.contains("is-expanded")) {
+      setTopSearchExpanded(true);
+      return;
+    }
+    runSearchFrom("top");
+  });
   $("#searchButton")?.addEventListener("click", () => runSearchFrom("filter"));
 
   ["searchInput", "categorySelect", "priceRange", "ratingSelect", "stockCheckbox"].forEach((id) => {
@@ -1324,7 +1402,13 @@ function bindEvents() {
     button.addEventListener("click", () => handleProfileAction(button.dataset.profileAction));
   });
 
-  document.addEventListener("click", closeMenus);
+  document.addEventListener("click", (event) => {
+    closeMenus();
+    if (!event.target.closest(".topbar-search")) collapseTopSearchIfEmpty();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") collapseTopSearchIfEmpty();
+  });
   $$(".dropdown-menu").forEach((menu) => menu.addEventListener("click", (event) => event.stopPropagation()));
 
   $("#closeCartButton")?.addEventListener("click", () => $("#cartDrawer").classList.remove("open"));
@@ -1377,3 +1461,5 @@ window.deleteProduct = deleteProduct;
 window.updateOrderStatus = updateOrderStatus;
 
 init().catch((error) => toast(error.message));
+
+

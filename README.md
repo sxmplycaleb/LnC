@@ -1,4 +1,4 @@
-# LnC Streetwear
+# OMANUTRO
 
 A self-contained street fashion ecommerce website built with Node.js, a vanilla frontend, JWT-based authentication, product search and filters, shopping cart and checkout, product administration, and order tracking.
 
@@ -50,3 +50,4 @@ CLOUDINARY_API_SECRET=your-secret
 ```
 
 When payment provider credentials are missing, checkout remains guarded by the existing local payment flow. When Cloudinary variables are missing, uploaded images are stored under `data/uploads` and served by the local server.
+
